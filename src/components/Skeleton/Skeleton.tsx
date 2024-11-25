@@ -1,11 +1,12 @@
 import { AppHeader } from "../AppHeader";
 
 interface Props {
+    selected: "exercises" | "statistics" | "info" | "exit";
     children?: React.ReactNode;
 }
 
 export function Skeleton(props: Props) {
-    const { children } = props;
+    const { selected, children } = props;
     return (
         <div
             style={{
@@ -15,7 +16,7 @@ export function Skeleton(props: Props) {
                 flexDirection: "column",
             }}
         >
-            <AppHeader selected="exercises" />
+            <AppHeader selected={selected} />
             <div
                 style={{
                     display: "flex",

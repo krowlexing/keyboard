@@ -5,13 +5,14 @@ import { Paper, Stack, Typography } from "@mui/material";
 interface Props {
     bigNumber: string;
     time: string;
+    onClick: () => void;
 }
 
 export function LevelCard(props: Props) {
-    const { time, bigNumber } = props;
+    const { time, bigNumber, onClick } = props;
     const fontSize = "0.8em";
     return (
-        <Container>
+        <Container onClick={onClick}>
             <BigNumber>{bigNumber}</BigNumber>
             <BottomLine>
                 <div

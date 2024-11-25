@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { AppMenuItem, HeaderContainer, Text } from "./styles";
 
 interface Props {
@@ -5,12 +6,26 @@ interface Props {
 }
 
 export function AppHeader(props: Props) {
+    const { selected } = props;
+    const nav = useNavigate();
     return (
         <HeaderContainer>
-            <AppMenuItem selected>Упражнения</AppMenuItem>
-            <AppMenuItem>Статистика</AppMenuItem>
-            <AppMenuItem>Справочная информация</AppMenuItem>
-            <AppMenuItem>Выхода нет</AppMenuItem>
+            <AppMenuItem
+                selected={selected == "exercises"}
+                onClick={() => nav("/exercises")}
+            >
+                Упражнения
+            </AppMenuItem>
+            <AppMenuItem
+                selected={selected == "statistics"}
+                onClick={() => nav("/stats")}
+            >
+                Статистика
+            </AppMenuItem>
+            <AppMenuItem selected={selected == "info"}>
+                Справочная информация
+            </AppMenuItem>
+            <AppMenuItem selected={selected == "exit"}>Выхода нет</AppMenuItem>
         </HeaderContainer>
     );
 }
