@@ -1,6 +1,6 @@
 import { Schedule } from "@mui/icons-material";
 import { BigNumber, BottomLine, Container } from "./styles";
-import { Paper, Typography } from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
 
 interface Props {
     bigNumber: string;
@@ -33,7 +33,6 @@ export function LevelCard(props: Props) {
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            flexShrink: 1,
                             justifyContent: "center",
                             alignItems: "center",
                             marginBottom: "-0.2em",

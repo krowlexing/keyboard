@@ -7,9 +7,26 @@ interface Props {
 export function Skeleton(props: Props) {
     const { children } = props;
     return (
-        <div>
+        <div
+            style={{
+                height: "100vh",
+                backgroundColor: "#999",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
             <AppHeader selected="exercises" />
-            {children}
+            <div
+                style={{
+                    display: "flex",
+                    flex: 1,
+                    margin: 20,
+                    background: "white",
+                    borderRadius: 10,
+                }}
+            >
+                {children}
+            </div>
         </div>
     );
 }

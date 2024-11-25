@@ -16,7 +16,7 @@ export const HeaderContainer = styled.div({
     display: "flex",
     justifyContent: "space-between",
     borderBottom: "2px solid black",
-
+    background: "white",
     padding: 30,
     paddingRight: 100,
     paddingLeft: 100,

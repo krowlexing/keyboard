@@ -10,10 +10,10 @@ export const BottomLine = styled.div({
     textAlign: "center",
 });
 export const BigNumber = styled(Typography)({
-    width: "200px",
-    height: "200px",
+    width: "180px",
+    height: "180px",
     textAlign: "center",
-    lineHeight: "240px",
+    lineHeight: "220px",
     fontSize: "8em",
     color: "white",
     backgroundColor: "darkblue",
@@ -22,9 +22,9 @@ export const BigNumber = styled(Typography)({
 });
 
 export const Container = styled(Paper)({
-    borderRadius: 5,
-    display: "flex",
-    flexDirection: "column",
+    borderRadius: 10,
+    display: "block",
     maxWidth: "200px",
+    height: "min-content",
     margin: 5,
 });
