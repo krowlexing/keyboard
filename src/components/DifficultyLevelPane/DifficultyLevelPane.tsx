@@ -24,6 +24,7 @@ export function DifficultyLevelPane(props: Props) {
             direction={"column"}
             justifyContent={"space-between"}
             minWidth={200}
+            maxWidth={200}
             borderRadius={10}
             flex={1}
         >

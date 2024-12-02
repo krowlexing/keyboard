@@ -14,7 +14,7 @@ export function LevelCard(props: Props) {
     return (
         <Container onClick={onClick}>
             <BigNumber>{bigNumber}</BigNumber>
-            <BottomLine>
+            <BottomLine gradient>
                 <div
                     style={{
                         display: "flex",

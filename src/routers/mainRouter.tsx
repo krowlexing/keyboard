@@ -2,6 +2,7 @@ import { createBrowserRouter, NavLink } from "react-router-dom";
 import { KeyboardInputTest } from "../pages/KeyboardInputTest";
 import { Exercises } from "../pages/Exercises";
 import { Stats } from "../pages/Stats";
+import { adminRouter } from "./adminRouter";
 
 export const mainRouter = createBrowserRouter([
     {
@@ -13,6 +14,8 @@ export const mainRouter = createBrowserRouter([
                 <NavLink to="/exercises">Exercises</NavLink>
                 <br />
                 <NavLink to="/stats">Stats</NavLink>
+                <br />
+                <NavLink to="/admin">Admin</NavLink>
             </div>
         ),
     },
@@ -27,5 +30,9 @@ export const mainRouter = createBrowserRouter([
     {
         path: "/stats",
         element: <Stats />,
+    },
+    {
+        path: "/admin",
+        children: adminRouter,
     },
 ]);

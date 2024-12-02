@@ -1,14 +1,18 @@
 import styled from "@emotion/styled";
 import { Paper, Typography } from "@mui/material";
 
-export const BottomLine = styled.div({
+type Props = {
+    gradient?: boolean;
+};
+export const BottomLine = styled.div(({ gradient }: Props) => ({
     color: "white",
-    background:
-        "linear-gradient(90deg, rgba(53,46,171,1) 0%, rgba(166,68,173,1) 100%)",
+    background: gradient
+        ? "linear-gradient(90deg, rgba(53,46,171,1) 0%, rgba(166,68,173,1) 100%)"
+        : "darkblue",
     borderBottomLeftRadius: "inherit",
     borderBottomRightRadius: "inherit",
-    textAlign: "center",
-});
+}));
+
 export const BigNumber = styled(Typography)({
     width: "180px",
     height: "180px",

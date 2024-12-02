@@ -1,12 +1,14 @@
 import { AppHeader } from "../AppHeader";
 
-interface Props {
-    selected: "exercises" | "statistics" | "info" | "exit";
+export interface SkeletonProps<T extends string> {
+    selected: T;
+    header?: (props: { selected: T }) => React.ReactNode;
     children?: React.ReactNode;
 }
 
-export function Skeleton(props: Props) {
+export function Skeleton<T extends string>(props: SkeletonProps<T>) {
     const { selected, children } = props;
+    const Header = props.header ?? AppHeader;
     return (
         <div
             style={{
@@ -16,12 +18,13 @@ export function Skeleton(props: Props) {
                 flexDirection: "column",
             }}
         >
-            <AppHeader selected={selected} />
+            <Header selected={selected as any} />
             <div
                 style={{
                     display: "flex",
                     flex: 1,
                     margin: 20,
+                    marginBottom: 0,
                     background: "white",
                     borderRadius: 10,
                 }}
