@@ -1,13 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { KeyboardInput } from "../components/KeyboardInput";
+import { useParams } from "react-router";
+import { network } from "../network/network";
 
 interface Props {}
 
 export function KeyboardInputTest(props: Props) {
+    const { id } = useParams();
+
+    const [exampleText, setExampleText] = useState("");
     const [value, setValue] = useState("");
 
-    const exampleText =
-        "Восемьдесят три процента всех дней в году начинаются одинаково: звенит будильник";
+    useEffect(() => {
+        network.exercises.get(+id!).then((e) => {
+            setExampleText(e.text);
+        });
+    }, [id]);
+
+    if (id == null) {
+        return <div>а где id....</div>;
+    }
+
     return (
         <>
             <KeyboardInput

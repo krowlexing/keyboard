@@ -1,6 +1,7 @@
 import { Button, ButtonProps, TextField, TextFieldProps } from "@mui/material";
+import { forwardRef } from "react";
 
-export const ExerciseTextInput = (props: TextFieldProps) => {
+export const ExerciseTextInput = forwardRef((props: TextFieldProps, ref) => {
     return (
         <TextField
             multiline
@@ -9,9 +10,10 @@ export const ExerciseTextInput = (props: TextFieldProps) => {
                 width: "inherit",
             }}
             {...props}
+            inputRef={ref}
         />
     );
-};
+});
 
 export const GenerateButton = (props: ButtonProps) => {
     return (

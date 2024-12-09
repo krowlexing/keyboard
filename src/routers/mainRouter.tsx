@@ -3,6 +3,8 @@ import { KeyboardInputTest } from "../pages/KeyboardInputTest";
 import { Exercises } from "../pages/Exercises";
 import { Stats } from "../pages/Stats";
 import { adminRouter } from "./adminRouter";
+import { Registration } from "../pages/Registration";
+import { Login } from "../pages/Login";
 
 export const mainRouter = createBrowserRouter([
     {
@@ -16,11 +18,13 @@ export const mainRouter = createBrowserRouter([
                 <NavLink to="/stats">Stats</NavLink>
                 <br />
                 <NavLink to="/admin">Admin</NavLink>
+                <br />
+                <NavLink to="/auth/login">Auth</NavLink>
             </div>
         ),
     },
     {
-        path: "/keyboard",
+        path: "/keyboard/:id",
         element: <KeyboardInputTest />,
     },
     {
@@ -34,5 +38,18 @@ export const mainRouter = createBrowserRouter([
     {
         path: "/admin",
         children: adminRouter,
+    },
+    {
+        path: "/auth",
+        children: [
+            {
+                path: "login",
+                element: <Login />,
+            },
+            {
+                path: "register",
+                element: <Registration />,
+            },
+        ],
     },
 ]);

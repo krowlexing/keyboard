@@ -7,10 +7,23 @@ import { AdminSkeleton } from "../../components/admin/AdminSkeleton.tsx";
 import { ManualForm } from "../../components/admin/exercise/ManualForm.tsx";
 import { TypeSelector } from "../../components/admin/exercise/TypeSelector.tsx";
 import { AutomaticForm } from "../../components/admin/exercise/AutomaticForm.tsx";
+import { network } from "../../network/network.ts";
 
 export function ExerciseCreation() {
     const [difficulty, setDifficulty] = useState(1);
     const [manual, setManual] = useState(true);
+
+    const createExercise = (text: string, level: number) => {
+        console.log("круто");
+        return network.exercises
+            .create(text, level)
+            .then(() => {
+                console.log("круто");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     return (
         <AdminSkeleton selected="create">
@@ -26,7 +39,16 @@ export function ExerciseCreation() {
                     >
                         <TypeSelector onChange={setManual} manual={manual} />
 
-                        {manual ? <ManualForm /> : <AutomaticForm />}
+                        {manual ? (
+                            <ManualForm
+                                defaultLevel={5}
+                                onSave={(text, level) =>
+                                    createExercise(text, level)
+                                }
+                            />
+                        ) : (
+                            <AutomaticForm />
+                        )}
                     </Stack>
                 </Stack>
             </Stack>

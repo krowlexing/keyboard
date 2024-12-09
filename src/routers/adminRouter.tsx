@@ -31,7 +31,7 @@ export const adminRouter: RouteObject[] = [
         element: <ExerciseEdit />,
     },
     {
-        path: "editor",
+        path: "editor/:id",
         element: <ExerciseEditor />,
     },
     {

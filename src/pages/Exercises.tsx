@@ -2,23 +2,34 @@ import { Container, Stack } from "@mui/material";
 import { LevelCard } from "../components/LevelCard";
 import { Skeleton } from "../components/Skeleton";
 import { DifficultyLevelPane } from "../components/DifficultyLevelPane";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Exercise } from "../data/Exercise";
+import { network } from "../network/network";
 
 interface Props {}
 
 export function Exercises(props: Props) {
     const [difficulty, setDifficulty] = useState(1);
     const nav = useNavigate();
-    let examples = Array(10)
-        .fill(0)
-        .map((_, i) => (
-            <LevelCard
-                onClick={() => nav("/keyboard")}
-                time="02:00"
-                bigNumber={`${i + 1}`}
-            />
-        ));
+
+    const [exercises, setExercises] = useState<Exercise[] | null>(null);
+
+    useEffect(() => {
+        network.exercises.getForLevel(difficulty).then(setExercises);
+    }, [difficulty]);
+
+    if (exercises == null) {
+        return <Skeleton selected="exercises">Подождите......</Skeleton>;
+    }
+
+    let examples = exercises.map((e, i) => (
+        <LevelCard
+            onClick={() => nav("/keyboard/" + e.id)}
+            time="02:00"
+            bigNumber={`${i + 1}`}
+        />
+    ));
 
     return (
         <Skeleton selected="exercises">
