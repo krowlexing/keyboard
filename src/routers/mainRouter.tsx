@@ -3,8 +3,8 @@ import { KeyboardInputTest } from "../pages/KeyboardInputTest";
 import { Exercises } from "../pages/Exercises";
 import { Stats } from "../pages/Stats";
 import { adminRouter } from "./adminRouter";
-import { Registration } from "../pages/Registration";
 import { Login } from "../pages/Login";
+import { Registration } from "../pages/Registration";
 
 export const mainRouter = createBrowserRouter([
     {

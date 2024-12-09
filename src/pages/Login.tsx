@@ -3,6 +3,7 @@ import { Column, Row, Txt } from "../utils/styles";
 import { useForm } from "react-hook-form";
 import { network } from "../network/network";
 import { useNavigate } from "react-router";
+import { jwtDecode } from "jwt-decode";
 
 type RegisterForm = {
     login: string;
@@ -16,11 +17,21 @@ export function Login() {
 
     const onSubmit = (data: RegisterForm) => {
         network.auth
-            .register(data.login, data.password)
+            .login(data.login, data.password)
             .then((token) => {
-                console.log(token);
                 network.newToken(token);
-                nav("/admin/difficulty");
+
+                let payload = jwtDecode(token);
+                console.dir(payload);
+
+                if (payload != null) {
+                    let id = (payload as any).userId;
+                    if (id == 1) {
+                        nav("/admin/difficulty");
+                    } else {
+                        nav("/exercises");
+                    }
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -40,7 +51,7 @@ export function Login() {
                         style={{ width: "100%" }}
                     >
                         <Column alignItems={"center"} width={300}>
-                            <Txt variant="h4">Регистрация</Txt>
+                            <Txt variant="h4">Авторизация</Txt>
                             <TextField
                                 {...register("login", { required: true })}
                                 sx={{
@@ -64,8 +75,16 @@ export function Login() {
                                     variant="contained"
                                     type="submit"
                                 >
-                                    Зарегистрироваться
+                                    Войти
                                 </Button>
+                            </Row>
+                            <Row>
+                                <Txt
+                                    color={"darkblue"}
+                                    onClick={() => nav("../register")}
+                                >
+                                    Нет аккаунта? Зарегистрироваться
+                                </Txt>
                             </Row>
                         </Column>
                     </form>
