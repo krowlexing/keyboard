@@ -8,7 +8,7 @@ export const Text = styled(Typography)();
 
 export const AppMenuItem = styled(Text)(({ selected }: Props) => ({
     display: "flex",
-    borderBottom: selected ? "3px solid blue" : undefined,
+    borderBottom: selected ? "3px solid blue" : "3px solid white",
     cursor: "pointer",
 }));
 
