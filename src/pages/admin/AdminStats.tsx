@@ -42,7 +42,7 @@ export function AdminStats(props: Props) {
     }
 
     const attemptMap = groupByExercise(stats);
-    const attempts = Array.from(attemptMap.values());
+    const attempts = sortById(attemptMap);
 
     const goodAttempts = attempts.map((exercise) =>
         exercise.filter((stat) => stat.errors < diffSettings.errors)

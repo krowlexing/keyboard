@@ -7,6 +7,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { Row } from "../utils/styles";
 import { Timer } from "../components/KeyboardInput/components/Timer";
 import { useTimer } from "../hooks";
+import { Keyboard } from "../components/keyboard/Keyboard";
 
 interface Props {}
 
@@ -38,6 +39,8 @@ export function KeyboardInputTest(props: Props) {
             }
         }, 2000);
     };
+
+    const nextKey = getNextKey(value, exampleText);
 
     const cancelReturn = () => {};
 
@@ -104,7 +107,14 @@ export function KeyboardInputTest(props: Props) {
                     setValue((val) => char);
                 }}
             />
+            <Keyboard nextKey={nextKey} />
             <button onClick={() => setValue("")}>reset</button>
         </>
     );
+}
+
+function getNextKey(value: string, exampleText: string): string {
+    const length = Math.min(value.length, exampleText.length);
+    const char = exampleText[length];
+    return char == " " ? "spacebar" : char;
 }

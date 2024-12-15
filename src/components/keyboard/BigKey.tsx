@@ -2,21 +2,24 @@ type Props = {
     keyColor: string;
     value: string;
     alt: string;
+    align: "left" | "right" | "center";
 };
 
-export function FixedKey(props: Props) {
+export function BigKey(props: Props) {
     const { keyColor, value, alt } = props;
 
     return (
         <div
             style={{
-                width: "50px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
+                flex: 1,
                 height: "50px",
                 textAlign: "center",
                 position: "relative",
                 margin: "3px",
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: props.align,
                 alignItems: "center",
                 background: keyColor,
                 border: "1px solid black",
@@ -24,7 +27,7 @@ export function FixedKey(props: Props) {
                 borderRadius: 10,
             }}
         >
-            <div style={{ position: "absolute", top: 3, right: 3 }}>{alt}</div>
+            <div style={{ position: "absolute", top: 3, right: 3 }}>{""}</div>
             <div>{value}</div>
         </div>
     );
