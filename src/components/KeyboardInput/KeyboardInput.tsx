@@ -1,4 +1,10 @@
-import { MutableRefObject, RefObject, useRef } from "react";
+import {
+    MutableRefObject,
+    RefObject,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import {
     InvisibleInput,
     Placeholder,
@@ -9,47 +15,56 @@ import {
 interface Props {
     value: string;
     placeholder: string;
+    disableInput?: boolean;
     onInput?: (char: string) => void;
 }
 
 export function KeyboardInput(props: Props) {
-    const { value, placeholder } = props;
+    const { value, placeholder, disableInput } = props;
+    const allowInput = disableInput;
     const inputElement: MutableRefObject<HTMLInputElement> = useRef(null!);
 
     const spans = validate(value, placeholder).map((text, i) => {
         return text.good ? (
-            <span>{text.text}</span>
+            <span key={i}>{text.text}</span>
         ) : (
-            <WrongInput>{text.text}</WrongInput>
+            <WrongInput key={i}>{text.text}</WrongInput>
         );
     });
 
     const leftover = leftoverPlaceholder(value, placeholder);
     return (
-        <TextInputContainer
-            onClick={() => {
-                console.log("clicked input");
-                inputElement.current.focus();
-            }}
-        >
-            <InvisibleInput
-                ref={inputElement}
-                value={value}
-                onChange={(e) => {
-                    props.onInput?.(e.target.value);
+        <>
+            <TextInputContainer
+                disabled={!allowInput}
+                onClick={() => {
+                    inputElement.current.focus();
                 }}
-                onKeyDown={(e) => {
-                    if (e.key === "Backspace") {
-                        const target: HTMLInputElement =
-                            e.target as HTMLInputElement;
-                        e.preventDefault();
-                    }
-                }}
-            />
+            >
+                <InvisibleInput
+                    ref={inputElement}
+                    value={value}
+                    disabled={!allowInput}
+                    onChange={(e) => {
+                        props.onInput?.(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                        if (value.length >= placeholder.length) {
+                            e.preventDefault();
+                            return;
+                        }
+                        if (e.key === "Backspace") {
+                            const target: HTMLInputElement =
+                                e.target as HTMLInputElement;
+                            e.preventDefault();
+                        }
+                    }}
+                />
 
-            {spans}
-            <Placeholder>{leftover}</Placeholder>
-        </TextInputContainer>
+                {spans}
+                <Placeholder>{leftover}</Placeholder>
+            </TextInputContainer>
+        </>
     );
 }
 
@@ -79,6 +94,17 @@ function validate(
     }
 
     return result;
+}
+
+export function countErrors(value: string, placeholder: string): number {
+    const length = Math.min(value.length, placeholder.length);
+    let count = 0;
+    for (let i = 0; i < length; i++) {
+        if (value[i] !== placeholder[i]) {
+            count++;
+        }
+    }
+    return count;
 }
 
 function leftoverPlaceholder(value: string, placeholder: string): string {

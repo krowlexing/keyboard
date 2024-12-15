@@ -14,6 +14,12 @@ export function AppHeader(props: Props) {
     const [modal, setModal] = useState(false);
 
     const selection = modal ? "info" : selected;
+
+    const exit = () => {
+        localStorage.removeItem("token");
+        nav("/auth/login");
+    };
+
     return (
         <HeaderContainer>
             <AppMenuItem
@@ -67,7 +73,9 @@ export function AppHeader(props: Props) {
                     )}
                 </div>
             </AppMenuItem>
-            <AppMenuItem selected={selected == "exit"}>Выхода нет</AppMenuItem>
+            <AppMenuItem selected={selected == "exit"} onClick={exit}>
+                Выхода нет
+            </AppMenuItem>
             {modal && (
                 <div
                     style={{

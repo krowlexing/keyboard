@@ -2,10 +2,14 @@ import axios, { AxiosInstance } from "axios";
 import { AbstractNetwork } from "./abstract_network";
 import { AuthNetwork } from "./auth";
 import { ExercisesNetwork } from "./exercises";
+import { StatsNetwork } from "./stats";
+import { DifficultyNetwork } from "./difficulty";
 
 export class Network extends AbstractNetwork {
     auth = new AuthNetwork(this);
     exercises = new ExercisesNetwork(this);
+    stats = new StatsNetwork(this);
+    difficulty = new DifficultyNetwork(this);
 
     constructor() {
         super();

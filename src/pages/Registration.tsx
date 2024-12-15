@@ -23,10 +23,9 @@ export function Registration() {
                 console.log(token);
                 network.newToken(token);
                 let payload = jwtDecode(token);
-                console.dir(payload);
 
                 if (payload != null) {
-                    let id = (payload as any).id;
+                    let id = (payload as any).userId;
                     if (id == 1) {
                         nav("/admin/difficulty");
                     } else {
@@ -78,6 +77,14 @@ export function Registration() {
                                 >
                                     Зарегистрироваться
                                 </Button>
+                            </Row>
+                            <Row>
+                                <Txt
+                                    color={"darkblue"}
+                                    onClick={() => nav("../login")}
+                                >
+                                    Уже есть аккаунт? Войти
+                                </Txt>
                             </Row>
                         </Column>
                     </form>

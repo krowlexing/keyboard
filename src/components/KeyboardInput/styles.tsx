@@ -1,11 +1,15 @@
 import styled from "@emotion/styled";
 
-export const TextInputContainer = styled.div`
-    border: 1px solid gray;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 5px;
-`;
+type Props = {
+    disabled?: boolean;
+};
+
+export const TextInputContainer = styled.div((props: Props) => ({
+    border: props.disabled ? "1px solid red" : "1px solid gray",
+    borderRadius: "5px",
+    padding: "5px",
+    margin: "5px",
+}));
 
 export const Placeholder = styled.span`
     color: gray;

@@ -17,6 +17,11 @@ export function MenuHeader(props: Props) {
 
     const selection = modal ? "info" : selected;
 
+    const exit = () => {
+        localStorage.removeItem("token");
+        nav("/auth/login");
+    };
+
     return (
         <HeaderContainer>
             <AppMenuItem
@@ -44,7 +49,7 @@ export function MenuHeader(props: Props) {
                 Статистика
             </AppMenuItem>
             <AppMenuItem selected={selection == "exit"}>
-                Выхода нет
+                <span onClick={exit}>Выхода нет</span>
                 <AppMenuItem
                     sx={{ marginLeft: 2 }}
                     selected={selection == "info"}

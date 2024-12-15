@@ -11,8 +11,9 @@ import {
 import { ForwardedRef, forwardRef } from "react";
 import { useForm, UseFormRegisterReturn } from "react-hook-form";
 import { Unstable_NumberInput as NumberInput } from "@mui/base";
+import { DifficultyData, zones } from "../../../dto/diff";
 
-type RawForm = {
+export type DifficultyFormData = {
     min: number;
     max: number;
     errors: number;
@@ -20,20 +21,25 @@ type RawForm = {
     zones: boolean[];
 };
 
-export function DifficultyEditForm() {
-    const { register, watch, handleSubmit } = useForm<RawForm>({
+type DifficultyProps = {
+    defaultValues: DifficultyData;
+    onSubmit: (data: DifficultyFormData) => void;
+};
+
+export function DifficultyEditForm(props: DifficultyProps) {
+    const { defaultValues } = props;
+
+    const { register, watch, handleSubmit } = useForm<DifficultyFormData>({
         defaultValues: {
-            min: 25,
-            max: 50,
-            errors: 5,
-            time: 1,
-            zones: [true, false, false, false, false],
+            min: defaultValues.minChars,
+            max: defaultValues.maxChars,
+            errors: defaultValues.errors,
+            time: defaultValues.timeLimit,
+            zones: zones(defaultValues.zones),
         },
     });
 
-    const onSubmit = (data: RawForm) => {
-        alert(JSON.stringify(data));
-    };
+    const onSubmit = props.onSubmit;
     const form = watch();
     const labels = [
         "Минимальное количество знаков",
@@ -42,7 +48,7 @@ export function DifficultyEditForm() {
         "Время нажатия на клавишу (в секундах)",
     ];
 
-    const zones = [
+    const zonesLabels = [
         "1 зона (синяя и тёмно-синяя)",
         "2 зона (зеленая и голубая)",
         "3 зона (оранжевая и жёлтая)",
@@ -50,7 +56,7 @@ export function DifficultyEditForm() {
         "5 зона (фиолетовая)",
     ];
 
-    const ids: (keyof RawForm)[] = ["min", "max", "errors", "time"];
+    const ids: (keyof DifficultyFormData)[] = ["min", "max", "errors", "time"];
 
     const rows = labels.map((label, index) => {
         return (
@@ -66,7 +72,7 @@ export function DifficultyEditForm() {
         );
     });
 
-    const boxes = zones.map((zone, index) => {
+    const boxes = zonesLabels.map((zone, index) => {
         return (
             <CheckboxRow
                 label={zone}
@@ -93,7 +99,11 @@ export function DifficultyEditForm() {
                     <Table>{boxes}</Table>
                     <img src="/keyboard_fingers.png" width={700} height={250} />
                     <Stack direction="row" width="100%">
-                        <Button variant="contained" sx={{ flex: 1 }}>
+                        <Button
+                            variant="contained"
+                            sx={{ flex: 1 }}
+                            type="submit"
+                        >
                             Сохранить
                         </Button>
                     </Stack>
@@ -106,7 +116,7 @@ export function DifficultyEditForm() {
 type Props = {
     label: string;
     id: string;
-    props: UseFormRegisterReturn<keyof RawForm>;
+    props: UseFormRegisterReturn<keyof DifficultyFormData>;
 };
 
 const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Backspace"];
