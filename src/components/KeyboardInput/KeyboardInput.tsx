@@ -77,10 +77,11 @@ function validate(
     const length = Math.min(value.length, placeholder.length);
 
     for (let i = 0; i < length; i++) {
+        let val = placeholder[i] == " " ? "&nbsp" : placeholder[i];
         if (value[i] !== placeholder[i]) {
-            result.push({ text: value[i], good: false });
+            result.push({ text: val, good: false });
         } else {
-            result.push({ text: value[i], good: true });
+            result.push({ text: val, good: true });
         }
         // if (lookingForGood && value[i] !== placeholder[i]) {
         //     result.push(buf);

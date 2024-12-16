@@ -4,7 +4,7 @@ import {
     NavLink,
     RouteObject,
 } from "react-router-dom";
-import { KeyboardInputTest } from "../pages/KeyboardInputTest";
+import { KeyboardInputTest } from "../pages/KeyboardPage";
 import { Exercises } from "../pages/Exercises";
 import { Stats } from "../pages/Stats";
 import { DifficultySettings } from "../pages/admin/DifficultySettings";

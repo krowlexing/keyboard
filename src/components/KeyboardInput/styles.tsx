@@ -7,6 +7,7 @@ type Props = {
 export const TextInputContainer = styled.div((props: Props) => ({
     border: props.disabled ? "1px solid red" : "1px solid gray",
     borderRadius: "5px",
+    height: "200px",
     padding: "5px",
     margin: "5px",
 }));
@@ -20,7 +21,6 @@ export const WrongInput = styled.span`
     background-color: red;
     white-space: pre;
     display: inline-block;
-    min-width: 10px;
 `;
 
 export const InvisibleInput = styled.input`

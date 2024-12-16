@@ -74,7 +74,7 @@ export function AppHeader(props: Props) {
                 </div>
             </AppMenuItem>
             <AppMenuItem selected={selected == "exit"} onClick={exit}>
-                Выхода нет
+                Выход
             </AppMenuItem>
             {modal && (
                 <div

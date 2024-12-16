@@ -49,7 +49,7 @@ export function MenuHeader(props: Props) {
                 Статистика
             </AppMenuItem>
             <AppMenuItem selected={selection == "exit"}>
-                <span onClick={exit}>Выхода нет</span>
+                <span onClick={exit}>Выход</span>
                 <AppMenuItem
                     sx={{ marginLeft: 2 }}
                     selected={selection == "info"}

@@ -4,10 +4,11 @@ import { useNavigate, useNavigation, useParams } from "react-router";
 import { network } from "../network/network";
 import { countErrors } from "../components/KeyboardInput/KeyboardInput";
 import { ArrowBack } from "@mui/icons-material";
-import { Row } from "../utils/styles";
+import { Column, Row } from "../utils/styles";
 import { Timer } from "../components/KeyboardInput/components/Timer";
 import { useTimer } from "../hooks";
 import { Keyboard } from "../components/keyboard/Keyboard";
+import { Skeleton } from "../components/Skeleton";
 
 interface Props {}
 
@@ -88,28 +89,37 @@ export function KeyboardInputTest(props: Props) {
     }
 
     return (
-        <>
-            <Row justifyContent={"space-between"}>
-                <ArrowBack />
-                <div>
-                    Количество символов: {value.length}/{exampleText.length}
-                </div>
-                <Timer time={`${Math.floor(timer / 60)}:${timer % 60}`} />
-                <div>
-                    Количество ошибок: {errors}/{maxErrors}
-                </div>
-            </Row>
-            <KeyboardInput
-                disableInput={!allowInput}
-                value={value}
-                placeholder={exampleText}
-                onInput={(char) => {
-                    setValue((val) => char);
-                }}
-            />
-            <Keyboard nextKey={nextKey} />
-            <button onClick={() => setValue("")}>reset</button>
-        </>
+        <Skeleton selected="exercises">
+            <Column
+                width={"100%"}
+                height={"100%"}
+                paddingLeft={20}
+                paddingRight={20}
+                paddingTop={10}
+            >
+                <Row justifyContent={"space-between"} fontSize={"1.5rem"}>
+                    <ArrowBack sx={{ width: 50, height: 30 }} />
+                    <div>
+                        Количество символов: {value.length}/{exampleText.length}
+                    </div>
+                    <Timer time={`${Math.floor(timer / 60)}:${timer % 60}`} />
+                    <div>
+                        Количество ошибок: {errors}/{maxErrors}
+                    </div>
+                </Row>
+                <KeyboardInput
+                    disableInput={!allowInput}
+                    value={value}
+                    placeholder={exampleText}
+                    onInput={(char) => {
+                        setValue((val) => char);
+                    }}
+                />
+                <Row justifyContent={"center"}>
+                    <Keyboard nextKey={nextKey} />
+                </Row>
+            </Column>
+        </Skeleton>
     );
 }
 
