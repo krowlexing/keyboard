@@ -57,6 +57,7 @@ export function AutomaticForm(props: Props) {
                         }
                         type="number"
                         size="small"
+                        inputProps={{ min: 1, max: 5 }}
                         value={difficulty}
                         sx={{ width: "5rem" }}
                     />

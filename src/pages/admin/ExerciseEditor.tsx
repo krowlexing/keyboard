@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import { Skeleton } from "../../components/Skeleton";
 import { DifficultyLevelPane } from "../../components/DifficultyLevelPane";
 import { useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { Txt } from "../../utils/styles.tsx";
 import { DifficultyData } from "../../dto/diff.ts";
+import { validateText } from "./ExerciseCreation.tsx";
 
 export function ExerciseEditor() {
     const { id } = useParams();
@@ -22,6 +23,8 @@ export function ExerciseEditor() {
     const [difficulty, setDifficulty] = useState(1);
     const [manual, setManual] = useState(true);
     const [length, setLength] = useState(exercise?.text.length);
+    const [invalidLength, setInvalidLength] = useState(false);
+    const [invalid, setInvalid] = useState(false);
     const nav = useNavigate();
 
     const [difficulties, setDifficulties] = useState<DifficultyData[]>([]);
@@ -30,13 +33,47 @@ export function ExerciseEditor() {
         network.difficulty.all().then(setDifficulties);
     }, []);
 
+    const validate = () => {
+        const selectedDiff = difficulties[difficulty - 1];
+        if (
+            savedText.length < selectedDiff.minChars ||
+            savedText.length > selectedDiff.maxChars
+        ) {
+            setInvalidLength(true);
+        }
+
+        const valid = validateText(difficulties[difficulty - 1], savedText);
+        if (!valid) {
+            setInvalid(true);
+        }
+
+        return valid;
+    };
+
+    useEffect(() => {
+        if (invalidLength) {
+            const timeout = setTimeout(() => {
+                setInvalidLength(false);
+            }, 3000);
+
+            return () => {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+            };
+        }
+    }, [invalidLength]);
+
     const onSubmit = () => {
-        updateExercise(savedText, difficulty);
+        if (validate()) {
+            updateExercise(savedText, difficulty);
+        }
     };
     useEffect(() => {
         if (id != null) {
             network.exercises.get(+id).then((exercise) => {
                 setExercise(exercise);
+                setSavedText(exercise.text);
                 setDifficulty(exercise.level);
                 setLength(exercise.text.length);
             });
@@ -72,6 +109,7 @@ export function ExerciseEditor() {
             <Stack direction="row" flex={1}>
                 <Stack flex={1} alignItems={"center"}>
                     <Stack
+                        sx={{ position: "relative" }}
                         width={900}
                         direction="column"
                         flexWrap="wrap"
@@ -79,15 +117,37 @@ export function ExerciseEditor() {
                         alignItems="center"
                         margin="10px"
                     >
+                        {invalidLength ? (
+                            <Paper
+                                sx={{
+                                    position: "absolute",
+                                    top: 0,
+                                    padding: "30px 0px 30px 30px",
+                                    width: "97%",
+                                    left: 0,
+                                    zIndex: 100,
+                                    textAlign: "center",
+                                    background: "lightpink",
+                                }}
+                            >
+                                Длина плохая
+                            </Paper>
+                        ) : (
+                            <></>
+                        )}
                         <TypeSelector onChange={setManual} manual={manual} />
-
+                        {invalid ? "Недопустимые символы" : ""}
                         {manual ? (
                             <ManualForm
                                 text={savedText}
                                 difficulty={difficulty}
                                 difficultyError={false}
                                 onDifficultyChange={setDifficulty}
-                                onChange={setSavedText}
+                                onChange={(text) => {
+                                    setSavedText(text);
+
+                                    setInvalid(false);
+                                }}
                                 onSave={onSubmit}
                             />
                         ) : (

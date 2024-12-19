@@ -150,7 +150,10 @@ export function ExerciseCreation() {
     );
 }
 
-function validateText(difficulty: DifficultyData, text: string): boolean {
+export function validateText(
+    difficulty: DifficultyData,
+    text: string
+): boolean {
     const goodZones = zonesArray(difficulty.zones);
     const zoneIds = goodZones
         .map((z, i) => (z ? i : null))
