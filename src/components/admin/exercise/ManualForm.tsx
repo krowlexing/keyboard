@@ -1,4 +1,4 @@
-import { Stack, TextField, Typography } from "@mui/material";
+import { Input, Stack, TextField, Typography } from "@mui/material";
 import { ExerciseTextInput, SaveButton } from "./styles";
 import { useForm } from "react-hook-form";
 
@@ -42,11 +42,15 @@ export function ManualForm(props: Props) {
                     margin={3}
                 >
                     <Typography margin={3}>Уровень сложности</Typography>
-                    <TextField
+                    <Input
                         required
                         type="number"
                         size="small"
                         value={difficulty}
+                        inputProps={{
+                            min: 1,
+                            max: 5,
+                        }}
                         onChange={(e) =>
                             onDifficultyChange(parseInt(e.target.value))
                         }
