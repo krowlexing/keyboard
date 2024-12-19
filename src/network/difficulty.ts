@@ -12,4 +12,9 @@ export class DifficultyNetwork extends AbstractSubNetwork {
         const response = await this.axios().post("/diff/" + level, data);
         return response.data;
     }
+
+    async all(): Promise<DifficultyData[]> {
+        const response = await this.axios().get("/diff");
+        return response.data;
+    }
 }

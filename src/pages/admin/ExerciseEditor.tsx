@@ -12,20 +12,33 @@ import { network } from "../../network/network.ts";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { Txt } from "../../utils/styles.tsx";
+import { DifficultyData } from "../../dto/diff.ts";
 
 export function ExerciseEditor() {
     const { id } = useParams();
+    const [savedText, setSavedText] = useState("");
     const [exercise, setExercise] = useState<Exercise | null>(null);
 
     const [difficulty, setDifficulty] = useState(1);
     const [manual, setManual] = useState(true);
+    const [length, setLength] = useState(exercise?.text.length);
     const nav = useNavigate();
 
+    const [difficulties, setDifficulties] = useState<DifficultyData[]>([]);
+
+    useEffect(() => {
+        network.difficulty.all().then(setDifficulties);
+    }, []);
+
+    const onSubmit = () => {
+        updateExercise(savedText, difficulty);
+    };
     useEffect(() => {
         if (id != null) {
             network.exercises.get(+id).then((exercise) => {
                 setExercise(exercise);
                 setDifficulty(exercise.level);
+                setLength(exercise.text.length);
             });
         }
     }, [id]);
@@ -70,14 +83,26 @@ export function ExerciseEditor() {
 
                         {manual ? (
                             <ManualForm
-                                text={defaultText}
-                                defaultLevel={difficulty}
-                                onSave={(text, level) =>
-                                    updateExercise(text, level)
-                                }
+                                text={savedText}
+                                difficulty={difficulty}
+                                difficultyError={false}
+                                onDifficultyChange={setDifficulty}
+                                onChange={setSavedText}
+                                onSave={onSubmit}
                             />
                         ) : (
-                            <AutomaticForm text="Жили были...." />
+                            <AutomaticForm
+                                difficulties={difficulties}
+                                length={length!}
+                                difficulty={difficulty}
+                                onDifficultyChange={setDifficulty}
+                                onLengthChange={setLength}
+                                onSave={onSubmit}
+                                text={savedText}
+                                onGenerate={(text) => {
+                                    setSavedText(text);
+                                }}
+                            />
                         )}
                     </Stack>
                 </Stack>

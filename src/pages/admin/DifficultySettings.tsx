@@ -18,12 +18,14 @@ export function DifficultySettings() {
     }, [difficulty]);
 
     const updateDifficulty = async (data: DifficultyFormData) => {
+        const str = zonesToString(data.zones);
+        console.log(str + " hahah");
         await network.difficulty.update(difficulty, {
             errors: data.errors,
             timeLimit: data.time,
             minChars: data.min,
             maxChars: data.max,
-            zones: zonesToString(data.zones),
+            zones: str,
         });
         const newDiffData = await network.difficulty.get(difficulty);
         setData(newDiffData);

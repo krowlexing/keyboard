@@ -3,29 +3,25 @@ import { ExerciseTextInput, SaveButton } from "./styles";
 import { useForm } from "react-hook-form";
 
 type Props = {
-    text?: string;
-    defaultLevel: number;
-    onSave: (text: string, level: number) => Promise<void>;
-};
-
-type Form = {
     text: string;
-    level: number;
+    difficulty: number;
+    difficultyError: boolean;
+    onDifficultyChange: (difficulty: number) => void;
+    onChange: (text: string) => void;
+    onSave: (text: string, level: number) => void;
 };
 
 export function ManualForm(props: Props) {
-    const { defaultLevel } = props;
-
-    const { register, handleSubmit, reset, formState } = useForm<Form>();
-
-    const onSubmit = (data: Form) => {
-        props.onSave(data.text, data.level).then(() => {
-            reset();
-        });
-    };
-
+    const { text, difficulty, difficultyError } = props;
+    const { onChange, onDifficultyChange, onSave } = props;
     return (
-        <form style={{ width: "inherit" }} onSubmit={handleSubmit(onSubmit)}>
+        <form
+            style={{ width: "inherit" }}
+            onSubmit={(e) => {
+                onSave(text, difficulty);
+                e.preventDefault();
+            }}
+        >
             <Stack
                 direction="column"
                 width="inherit"
@@ -33,8 +29,10 @@ export function ManualForm(props: Props) {
                 alignItems="center"
             >
                 <ExerciseTextInput
-                    {...register("text", { required: true })}
+                    value={text}
+                    onChange={(e) => onChange(e.target.value)}
                     multiline
+                    required
                     defaultValue={props.text}
                 />
                 <Stack
@@ -45,19 +43,16 @@ export function ManualForm(props: Props) {
                 >
                     <Typography margin={3}>Уровень сложности</Typography>
                     <TextField
-                        {...register("level", {
-                            min: 1,
-                            max: 5,
-                            required: true,
-
-                            valueAsNumber: true,
-                        })}
+                        required
                         type="number"
                         size="small"
-                        defaultValue={defaultLevel}
+                        value={difficulty}
+                        onChange={(e) =>
+                            onDifficultyChange(parseInt(e.target.value))
+                        }
                         sx={{
                             width: "5rem",
-                            border: formState.errors.level
+                            border: difficultyError
                                 ? "3px solid red"
                                 : undefined,
 

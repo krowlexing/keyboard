@@ -8,7 +8,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, useEffect } from "react";
 import { useForm, UseFormRegisterReturn } from "react-hook-form";
 import { Unstable_NumberInput as NumberInput } from "@mui/base";
 import { DifficultyData, zones } from "../../../dto/diff";
@@ -23,21 +23,40 @@ export type DifficultyFormData = {
 
 type DifficultyProps = {
     defaultValues: DifficultyData;
+
     onSubmit: (data: DifficultyFormData) => void;
 };
 
 export function DifficultyEditForm(props: DifficultyProps) {
     const { defaultValues } = props;
 
-    const { register, watch, handleSubmit } = useForm<DifficultyFormData>({
-        defaultValues: {
+    const goodZones = zones(defaultValues.zones);
+
+    useEffect(() => {
+        console.dir(defaultValues);
+    }, []);
+    const { register, watch, handleSubmit, reset, formState } =
+        useForm<DifficultyFormData>({
+            defaultValues: {
+                min: defaultValues.minChars,
+                max: defaultValues.maxChars,
+                errors: defaultValues.errors,
+                time: defaultValues.timeLimit,
+                zones: zones(defaultValues.zones),
+            },
+        });
+
+    const formErrors = formState.errors;
+
+    useEffect(() => {
+        reset({
             min: defaultValues.minChars,
             max: defaultValues.maxChars,
             errors: defaultValues.errors,
             time: defaultValues.timeLimit,
             zones: zones(defaultValues.zones),
-        },
-    });
+        });
+    }, [defaultValues]);
 
     const onSubmit = props.onSubmit;
     const form = watch();
@@ -58,32 +77,74 @@ export function DifficultyEditForm(props: DifficultyProps) {
 
     const ids: (keyof DifficultyFormData)[] = ["min", "max", "errors", "time"];
 
-    const rows = labels.map((label, index) => {
-        return (
+    const rows = [
+        <>
             <Input
-                label={label}
-                id={ids[index]}
-                props={register(ids[index], {
+                key={labels[0]}
+                label={labels[0]}
+                id={ids[0]}
+                props={register("min", {
                     valueAsNumber: true,
                     min: 0,
                     required: true,
+                    max: 1000,
+                    validate: (value, form) => {
+                        return value < form.max;
+                    },
                 })}
             />
-        );
-    });
-
+            {formErrors.min !== undefined && (
+                <Typography color={"red"} marginLeft={3}>
+                    Минимальное значение должно быть меньше максимального
+                </Typography>
+            )}
+        </>,
+        <Input
+            key={labels[1]}
+            label={labels[1]}
+            id={"max"}
+            props={register("max", {
+                valueAsNumber: true,
+                min: 1,
+                required: true,
+                max: 1000,
+            })}
+        />,
+        <Input
+            key={labels[2]}
+            label={labels[2]}
+            id={"errors"}
+            props={register("errors", {
+                valueAsNumber: true,
+                min: 0,
+                required: true,
+                max: 100,
+            })}
+        />,
+        <Input
+            key={labels[3]}
+            label={labels[3]}
+            id={"time"}
+            props={register("time", {
+                valueAsNumber: true,
+                min: 1,
+                required: true,
+                max: 10,
+            })}
+        />,
+    ];
     const boxes = zonesLabels.map((zone, index) => {
         return (
             <CheckboxRow
+                key={index}
                 label={zone}
-                inputProps={register(`zones.${index}`, {
-                    required: true,
-                })}
+                inputProps={register(`zones.${index}` as any)}
             />
         );
     });
     return (
         <Stack flex={1}>
+            {/* {JSON.stringify(formErrors.min?.)} */}
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 style={{ display: "flex", flex: 1 }}
@@ -96,8 +157,10 @@ export function DifficultyEditForm(props: DifficultyProps) {
                 >
                     <Table>{rows}</Table>
                     <Typography>Выбор зон клавиатуры:</Typography>
-                    <Table>{boxes}</Table>
-                    <img src="/keyboard_fingers.png" width={700} height={250} />
+                    <Table>
+                        <tbody>{boxes}</tbody>
+                    </Table>
+                    <img src="/keyboard_fingers.png" width={600} height={250} />
                     <Stack direction="row" width="100%">
                         <Button
                             variant="contained"
@@ -154,12 +217,15 @@ type CheckboxRowProps = {
 };
 
 const CheckboxRow = forwardRef(
-    (props: CheckboxRowProps, ref: ForwardedRef<HTMLInputElement>) => {
+    (props: CheckboxRowProps, _ref: ForwardedRef<HTMLInputElement>) => {
         const { inputProps } = props;
+
+        const propsClone = { ...inputProps, ref: undefined };
+        const ref = inputProps.ref;
         return (
             <TableRow sx={{ padding: "none" }}>
                 <TableCell padding="none" sx={{ border: "none" }}>
-                    <Checkbox {...inputProps} inputRef={ref} />
+                    <input type="checkbox" {...propsClone} ref={ref} />
                     {props.label}
                 </TableCell>
             </TableRow>

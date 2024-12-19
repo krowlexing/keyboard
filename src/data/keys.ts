@@ -22,6 +22,21 @@ export const groups = Object.entries({
     color: value.color,
 }));
 
+const x = [
+    ["1a", "1b"],
+    ["2a", "2b"],
+    ["3a", "3b"],
+    ["4a", "4b"],
+];
+
+export const zones = [
+    groups[0].value.concat(groups[1].value),
+    groups[2].value.concat(groups[3].value),
+    groups[4].value.concat(groups[5].value),
+    groups[6].value.concat(groups[7].value),
+    [" "],
+];
+
 export const keyboard = [
     ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "back"],
     ["tab", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\\"],
