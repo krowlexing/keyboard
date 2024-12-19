@@ -5,7 +5,7 @@ import { AdminSkeleton } from "../../components/admin/AdminSkeleton";
 import { network } from "../../network/network";
 import { AdminStat } from "../../dto/stats";
 import { Exercise } from "../../data/Exercise";
-import { Txt } from "../../utils/styles";
+import { Column, Txt } from "../../utils/styles";
 import { DifficultyData } from "../../dto/diff";
 import { BarChart } from "@mui/x-charts";
 
@@ -78,28 +78,33 @@ export function AdminStats(props: Props) {
                     ]}
                     yAxis={[{ tickMinStep: 1 }]}
                 />
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Имя пользователя</th>
-                            <th>Номер упражнения</th>
-                            <th>Количество ошибок</th>
-                            <th>Среднее время нажатия на клавишу, с</th>
-                            <th>Дата прохождения</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {stats?.map((s) => (
-                            <tr key={s.id}>
-                                <td>{s.username}</td>
-                                <td>{s.id}</td>
-                                <td>{s.errors}</td>
-                                <td>{s.time / s.chars}</td>
-                                <td>{s.created.substring(0, 10)}</td>
+                <Column maxHeight={"600px"} overflow={"scroll"}>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Имя пользователя</th>
+                                <th>Номер упражнения</th>
+                                <th>Количество ошибок</th>
+                                <th>Среднее время нажатия на клавишу, с</th>
+                                <th>Дата прохождения</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {stats?.map((s) => (
+                                <tr key={s.id}>
+                                    <td>{s.username}</td>
+                                    <td>{s.id}</td>
+                                    <td>{s.errors}</td>
+                                    <td>
+                                        {Math.floor((s.time * 100) / s.chars) /
+                                            100}
+                                    </td>
+                                    <td>{s.created.substring(0, 10)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </Column>
             </Stack>
         </AdminSkeleton>
     );
