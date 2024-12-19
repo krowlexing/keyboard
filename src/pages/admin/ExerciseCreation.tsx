@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import { Skeleton } from "../../components/Skeleton";
 import { DifficultyLevelPane } from "../../components/DifficultyLevelPane";
 import { useEffect, useState } from "react";
@@ -21,6 +21,8 @@ export function ExerciseCreation() {
     const [difficulty, setDifficulty] = useState(1);
     const [length, setLength] = useState(50);
 
+    const [invalidLength, setInvalidLength] = useState(false);
+
     const [invalid, setInvalid] = useState(false);
 
     useEffect(() => {
@@ -30,11 +32,33 @@ export function ExerciseCreation() {
         });
     }, []);
 
+    useEffect(() => {
+        if (invalidLength) {
+            const timeout = setTimeout(() => {
+                setInvalidLength(false);
+            }, 3000);
+
+            return () => {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+            };
+        }
+    }, [invalidLength]);
+
     const reset = () => {
         setSavedText("");
     };
 
     const validate = () => {
+        const selectedDiff = difficulties[difficulty - 1];
+        if (
+            savedText.length < selectedDiff.minChars ||
+            savedText.length > selectedDiff.maxChars
+        ) {
+            setInvalidLength(true);
+        }
+
         const valid = validateText(difficulties[difficulty - 1], savedText);
         if (!valid) {
             setInvalid(true);
@@ -64,6 +88,7 @@ export function ExerciseCreation() {
             <Stack direction="row" flex={1}>
                 <Stack flex={1} alignItems={"center"}>
                     <Stack
+                        position={"relative"}
                         width={900}
                         direction="column"
                         flexWrap="wrap"
@@ -71,6 +96,24 @@ export function ExerciseCreation() {
                         alignItems="center"
                         margin="10px"
                     >
+                        {invalidLength ? (
+                            <Paper
+                                sx={{
+                                    position: "absolute",
+                                    top: 0,
+                                    padding: "30px 0px 30px 30px",
+                                    width: "97%",
+                                    left: 0,
+                                    zIndex: 100,
+                                    textAlign: "center",
+                                    background: "lightpink",
+                                }}
+                            >
+                                Длина плохая
+                            </Paper>
+                        ) : (
+                            <></>
+                        )}
                         <TypeSelector onChange={setManual} manual={manual} />
 
                         {invalid ? "Недопустимые символы" : ""}
