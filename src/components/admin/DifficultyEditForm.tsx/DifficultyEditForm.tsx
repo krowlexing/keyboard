@@ -138,7 +138,11 @@ export function DifficultyEditForm(props: DifficultyProps) {
             <CheckboxRow
                 key={index}
                 label={zone}
-                inputProps={register(`zones.${index}` as any)}
+                inputProps={register(`zones.${index}` as any, {
+                    validate: (_value, form) => {
+                        return form.zones.includes(true);
+                    },
+                })}
             />
         );
     });
@@ -158,6 +162,11 @@ export function DifficultyEditForm(props: DifficultyProps) {
                     <Table>{rows}</Table>
                     <Typography>Выбор зон клавиатуры:</Typography>
                     <Table>
+                        {formErrors.zones?.[0] !== undefined && (
+                            <Typography color={"red"} marginLeft={3}>
+                                Выберите хотя бы одну зону
+                            </Typography>
+                        )}
                         <tbody>{boxes}</tbody>
                     </Table>
                     <img src="/keyboard_fingers.png" width={600} height={250} />

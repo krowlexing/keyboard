@@ -19,7 +19,6 @@ export function DifficultySettings() {
 
     const updateDifficulty = async (data: DifficultyFormData) => {
         const str = zonesToString(data.zones);
-        console.log(str + " hahah");
         await network.difficulty.update(difficulty, {
             errors: data.errors,
             timeLimit: data.time,
