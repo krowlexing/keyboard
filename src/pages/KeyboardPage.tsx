@@ -83,8 +83,6 @@ export function KeyboardInputTest(props: Props) {
         }
     }, [value]);
 
-    const maxErrors = 5;
-
     useEffect(() => {
         network.exercises.get(+id!).then((e) => {
             setDifficulty(e.level);
@@ -95,9 +93,10 @@ export function KeyboardInputTest(props: Props) {
         });
     }, [id]);
 
-    if (id == null) {
+    if (id == null || difficulties.length == 0) {
         return <div>а где id....</div>;
     }
+    const maxErrors = difficulties[difficulty - 1].errors;
 
     return (
         <Skeleton selected="exercises">
