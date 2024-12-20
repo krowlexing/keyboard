@@ -23,5 +23,6 @@ export function getExerciseDuration(
 export function prettyTime(time: number): string {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    const leadingZero = minutes < 10 ? "0" : "";
+    return `${leadingZero}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 }

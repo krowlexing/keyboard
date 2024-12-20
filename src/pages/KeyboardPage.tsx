@@ -9,10 +9,13 @@ import { Timer } from "../components/KeyboardInput/components/Timer";
 import { useTimer } from "../hooks";
 import { Keyboard } from "../components/keyboard/Keyboard";
 import { Skeleton } from "../components/Skeleton";
-import { getExerciseDuration } from "../utils";
+import { getExerciseDuration, prettyTime } from "../utils";
 import { DifficultyData } from "../dto/diff";
+import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 
 interface Props {}
+
+let audio = new Audio("/погоня.mp3");
 
 export function KeyboardInputTest(props: Props) {
     const { id } = useParams();
@@ -22,6 +25,9 @@ export function KeyboardInputTest(props: Props) {
     const [allowInput, setDisabled] = useState(false);
     const [difficulties, setDifficulties] = useState<DifficultyData[]>([]);
     const [difficulty, setDifficulty] = useState(1);
+
+    const [keyboardHidden, setKeyboardHidden] = useState(false);
+    const [playAudio, setPlayAudio] = useState(false);
 
     const [text, setText] = useState("");
 
@@ -47,6 +53,19 @@ export function KeyboardInputTest(props: Props) {
             }
         }, 2000);
     };
+
+    useEffect(() => {
+        audio = new Audio("/погоня.mp3");
+    }, []);
+
+    useEffect(() => {
+        if (playAudio) {
+            audio.play();
+            audio.volume = 0.5;
+            audio.loop = true;
+            return () => audio.pause();
+        }
+    }, [playAudio]);
 
     const nextKey = getNextKey(value, exampleText);
 
@@ -112,7 +131,7 @@ export function KeyboardInputTest(props: Props) {
                     <div>
                         Количество символов: {value.length}/{exampleText.length}
                     </div>
-                    <Timer time={`${Math.floor(timer / 60)}:${timer % 60}`} />
+                    <Timer time={prettyTime(timer)} />
                     <div>
                         Количество ошибок: {errors}/{maxErrors}
                     </div>
@@ -125,8 +144,51 @@ export function KeyboardInputTest(props: Props) {
                         setValue((val) => char);
                     }}
                 />
-                <Row justifyContent={"center"}>
+                <Row
+                    justifyContent={"center"}
+                    visibility={keyboardHidden ? "hidden" : "visible"}
+                >
                     <Keyboard nextKey={nextKey} />
+                </Row>
+                <Row width={"min-content"}>
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>
+                                    <input
+                                        type="checkbox"
+                                        checked={!keyboardHidden}
+                                        onChange={(e) =>
+                                            setKeyboardHidden(!e.target.checked)
+                                        }
+                                    ></input>
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        whiteSpace: "nowrap",
+                                    }}
+                                >
+                                    включить клавиатуру
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell
+                                    sx={{
+                                        whiteSpace: "nowrap",
+                                    }}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={playAudio}
+                                        onChange={(e) =>
+                                            setPlayAudio(e.target.checked)
+                                        }
+                                    ></input>
+                                </TableCell>
+                                <TableCell>включить музыку</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </Row>
             </Column>
         </Skeleton>
