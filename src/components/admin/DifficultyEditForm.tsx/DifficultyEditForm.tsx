@@ -8,7 +8,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { ForwardedRef, forwardRef, useEffect } from "react";
+import { ForwardedRef, forwardRef, useEffect, useState } from "react";
 import { useForm, UseFormRegisterReturn } from "react-hook-form";
 import { Unstable_NumberInput as NumberInput } from "@mui/base";
 import { DifficultyData, zones } from "../../../dto/diff";
@@ -31,6 +31,8 @@ export function DifficultyEditForm(props: DifficultyProps) {
     const { defaultValues } = props;
 
     const goodZones = zones(defaultValues.zones);
+
+    const [savePopup, setSavePopup] = useState(false);
 
     useEffect(() => {
         console.dir(defaultValues);
@@ -60,6 +62,7 @@ export function DifficultyEditForm(props: DifficultyProps) {
 
     const onSubmit = props.onSubmit;
     const form = watch();
+
     const labels = [
         "Минимальное количество знаков",
         "Максимальное количество знаков",
@@ -151,7 +154,7 @@ export function DifficultyEditForm(props: DifficultyProps) {
             {/* {JSON.stringify(formErrors.min?.)} */}
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                style={{ display: "flex", flex: 1 }}
+                style={{ display: "flex", flex: 1, position: "relative" }}
             >
                 <Stack
                     direction={"column"}

@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
 import { Skeleton } from "../../components/Skeleton";
 import { DifficultyLevelPane } from "../../components/DifficultyLevelPane";
 import { useEffect, useState } from "react";
@@ -12,10 +12,20 @@ export function DifficultySettings() {
     const [difficulty, setDifficulty] = useState(1);
 
     const [data, setData] = useState<DifficultyData | null>(null);
+    const [savePopup, setSavePopup] = useState(false);
 
     useEffect(() => {
         network.difficulty.get(difficulty).then(setData);
     }, [difficulty]);
+
+    useEffect(() => {
+        if (savePopup) {
+            const timeout = setTimeout(() => {
+                setSavePopup(false);
+            }, 3000);
+            return () => clearTimeout(timeout);
+        }
+    }, [savePopup]);
 
     const updateDifficulty = async (data: DifficultyFormData) => {
         const str = zonesToString(data.zones);
@@ -27,6 +37,7 @@ export function DifficultySettings() {
             zones: str,
         });
         const newDiffData = await network.difficulty.get(difficulty);
+        setSavePopup(true);
         setData(newDiffData);
     };
 
@@ -44,14 +55,32 @@ export function DifficultySettings() {
         );
     }
 
+    const greenShade = "#4caf50";
+
     return (
         <AdminSkeleton selected="difficulty">
-            <Stack direction="row" flex={1}>
+            <Stack direction="row" flex={1} position={"relative"}>
                 <DifficultyLevelPane
                     selected={difficulty}
                     onTabClick={setDifficulty}
                 />
-                <Stack flex={1} alignItems={"center"}>
+                <Stack flex={1} alignItems={"center"} position={"relative"}>
+                    {savePopup && (
+                        <Paper
+                            sx={{
+                                padding: 3,
+                                textAlign: "center",
+                                position: "absolute",
+                                borderRadius: 10,
+
+                                top: 2,
+                                background: greenShade,
+                                zIndex: 1,
+                            }}
+                        >
+                            <Typography color={"white"}>Сохранено</Typography>
+                        </Paper>
+                    )}
                     <Stack
                         width={900}
                         direction={"row"}
