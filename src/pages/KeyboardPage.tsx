@@ -127,7 +127,10 @@ export function KeyboardInputTest(props: Props) {
                 paddingTop={10}
             >
                 <Row justifyContent={"space-between"} fontSize={"1.5rem"}>
-                    <ArrowBack sx={{ width: 50, height: 30 }} />
+                    <ArrowBack
+                        sx={{ width: 50, height: 30 }}
+                        onClick={() => nav(-1)}
+                    />
                     <div>
                         Количество символов: {value.length}/{exampleText.length}
                     </div>
