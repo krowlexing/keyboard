@@ -76,7 +76,7 @@ export function AdminStats(props: Props) {
                         { data: goodAttemptsCount, stack: "a" },
                         { data: failedAttemptsCount, stack: "a" },
                     ]}
-                    yAxis={[{ tickMinStep: 1 }]}
+                    yAxis={[{ tickMinStep: 1, label: "Количество" }]}
                 />
                 <Column maxHeight={"600px"} overflow={"scroll"}>
                     <table>

@@ -30,7 +30,9 @@ export function ExerciseEdit(props: Props) {
         );
     }
 
-    let examples = exercises.map((exercise, i) => (
+    const sortedExercises = exercises.sort((a, b) => a.id - b.id);
+
+    let examples = sortedExercises.map((exercise, i) => (
         <EditableLevelCard
             onClick={() => nav("/admin/editor/" + exercise.id)}
             time="02:00"

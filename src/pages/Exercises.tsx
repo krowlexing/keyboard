@@ -23,7 +23,9 @@ export function Exercises(props: Props) {
         return <Skeleton selected="exercises">Подождите......</Skeleton>;
     }
 
-    let examples = exercises.map((e, i) => (
+    const sortedExercises = exercises.sort((a, b) => a.id - b.id);
+    console.dir(sortedExercises);
+    let examples = sortedExercises.map((e, i) => (
         <LevelCard
             onClick={() => nav("/keyboard/" + e.id)}
             time="02:00"

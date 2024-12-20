@@ -57,6 +57,7 @@ export function ExerciseCreation() {
             savedText.length > selectedDiff.maxChars
         ) {
             setInvalidLength(true);
+            return;
         }
 
         const valid = validateText(difficulties[difficulty - 1], savedText);

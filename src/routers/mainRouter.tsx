@@ -1,4 +1,4 @@
-import { createBrowserRouter, NavLink } from "react-router-dom";
+import { createBrowserRouter, Navigate, NavLink } from "react-router-dom";
 import { KeyboardInputTest } from "../pages/KeyboardPage";
 import { Exercises } from "../pages/Exercises";
 import { Stats } from "../pages/Stats";
@@ -9,19 +9,7 @@ import { Registration } from "../pages/Registration";
 export const mainRouter = createBrowserRouter([
     {
         path: "/",
-        element: (
-            <div>
-                <NavLink to="/keyboard">Keyboard</NavLink>
-                <br />
-                <NavLink to="/exercises">Exercises</NavLink>
-                <br />
-                <NavLink to="/stats">Stats</NavLink>
-                <br />
-                <NavLink to="/admin">Admin</NavLink>
-                <br />
-                <NavLink to="/auth/login">Auth</NavLink>
-            </div>
-        ),
+        element: <Navigate to={"/auth/login"} />,
     },
     {
         path: "/keyboard/:id",
