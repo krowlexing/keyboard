@@ -6,20 +6,24 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Exercise } from "../data/Exercise";
 import { network } from "../network/network";
+import { getExerciseDuration, prettyTime } from "../utils";
+import { DifficultyData } from "../dto/diff";
 
 interface Props {}
 
 export function Exercises(props: Props) {
     const [difficulty, setDifficulty] = useState(1);
+    const [difficulties, setDifficulties] = useState<DifficultyData[]>([]);
     const nav = useNavigate();
 
     const [exercises, setExercises] = useState<Exercise[] | null>(null);
 
     useEffect(() => {
         network.exercises.getForLevel(difficulty).then(setExercises);
+        network.difficulty.all().then(setDifficulties);
     }, [difficulty]);
 
-    if (exercises == null) {
+    if (exercises == null || difficulties.length == 0) {
         return <Skeleton selected="exercises">Подождите......</Skeleton>;
     }
 
@@ -28,7 +32,9 @@ export function Exercises(props: Props) {
     let examples = sortedExercises.map((e, i) => (
         <LevelCard
             onClick={() => nav("/keyboard/" + e.id)}
-            time="02:00"
+            time={prettyTime(
+                getExerciseDuration(difficulties[e.level - 1], e.text)
+            )}
             bigNumber={`${i + 1}`}
         />
     ));

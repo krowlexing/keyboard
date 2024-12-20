@@ -9,6 +9,8 @@ import { Timer } from "../components/KeyboardInput/components/Timer";
 import { useTimer } from "../hooks";
 import { Keyboard } from "../components/keyboard/Keyboard";
 import { Skeleton } from "../components/Skeleton";
+import { getExerciseDuration } from "../utils";
+import { DifficultyData } from "../dto/diff";
 
 interface Props {}
 
@@ -18,6 +20,8 @@ export function KeyboardInputTest(props: Props) {
     const [exampleText, setExampleText] = useState("");
     const [value, setValue] = useState("");
     const [allowInput, setDisabled] = useState(false);
+    const [difficulties, setDifficulties] = useState<DifficultyData[]>([]);
+    const [difficulty, setDifficulty] = useState(1);
 
     const [text, setText] = useState("");
 
@@ -25,7 +29,10 @@ export function KeyboardInputTest(props: Props) {
     const path = window.location.pathname;
     const n = useNavigation();
 
-    const defaultTime = 120;
+    const defaultTime =
+        difficulties.length > 0
+            ? getExerciseDuration(difficulties[difficulty - 1], exampleText)
+            : 120;
     const [timer, start, stop] = useTimer(defaultTime, () => {
         setDisabled(true);
     });
@@ -80,7 +87,11 @@ export function KeyboardInputTest(props: Props) {
 
     useEffect(() => {
         network.exercises.get(+id!).then((e) => {
+            setDifficulty(e.level);
             setExampleText(e.text);
+        });
+        network.difficulty.all().then((d) => {
+            setDifficulties(d);
         });
     }, [id]);
 

@@ -1,3 +1,5 @@
+import { DifficultyData } from "../dto/diff";
+
 /**
  * Object.keys may return additional keys
  *
@@ -9,4 +11,17 @@
  */
 export function unsafeKeys<T extends object>(object: T): (keyof T)[] {
     return Object.keys(object) as (keyof T)[];
+}
+
+export function getExerciseDuration(
+    difficulty: DifficultyData,
+    text: string
+): number {
+    return difficulty.timeLimit * text.length;
+}
+
+export function prettyTime(time: number): string {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 }

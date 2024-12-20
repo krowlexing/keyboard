@@ -21,6 +21,11 @@ export function useTimer(time: number, onEnd: () => void) {
         setStopped(true);
         onEnd();
     };
+
+    useEffect(() => {
+        setTimer(time);
+    }, [time]);
+
     useEffect(() => {
         let interval = setInterval(() => {
             setTimer((t) => {
