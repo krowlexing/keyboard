@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DifficultyLevelPane } from "../../components/DifficultyLevelPane";
 import { AdminSkeleton } from "../../components/admin/AdminSkeleton";
 import { network } from "../../network/network";
-import { AdminStat } from "../../dto/stats";
+import { AdminStat, Stat } from "../../dto/stats";
 import { Exercise } from "../../data/Exercise";
 import { Column, Txt } from "../../utils/styles";
 import { DifficultyData } from "../../dto/diff";
@@ -20,7 +20,9 @@ export function AdminStats(props: Props) {
     );
     const [stats, setStats] = useState<AdminStat[] | null>(null);
 
-    const exercises = listToMap(exercisesList || []);
+    const exercisesList2 = exercisesList ?? [];
+    exercisesList2.sort((a, b) => a.id - b.id);
+    const exercises = listToMap(exercisesList2);
     useEffect(() => {
         network.difficulty.get(difficulty).then(setDiffSettings);
         network.stats.getAll(difficulty).then(setStats);
@@ -41,6 +43,19 @@ export function AdminStats(props: Props) {
         );
     }
 
+    const usedExercises = Array.from(new Set(stats.map((s) => s.exerciseId)));
+    const exercisesNumbers = exercisesList2
+        .map((e, i) => [e, i + 1])
+        .filter(([e, n]) => usedExercises.includes(+e))
+        .map(([e, n]) => n);
+
+    const data = prepareData(stats || []);
+
+    const ids = data.map(
+        (d) =>
+            `Упражнение ${exercisesList2.findIndex((e) => e.id === +d[0]) + 1}`
+    );
+
     const attemptMap = groupByExercise(stats);
     const attempts = sortById(attemptMap);
 
@@ -56,6 +71,12 @@ export function AdminStats(props: Props) {
         (exercise) => exercise.length
     );
 
+    const headerStyle = {
+        position: "sticky",
+        top: 0,
+        background: "white",
+    } as any;
+
     return (
         <AdminSkeleton selected="stats">
             <Stack direction="row">
@@ -70,23 +91,39 @@ export function AdminStats(props: Props) {
                 alignItems={"center"}
                 flex={1}
             >
+                <Txt paddingTop={4}>Статистика по упражнениям</Txt>
                 <BarChart
                     height={500}
                     series={[
                         { data: goodAttemptsCount, stack: "a" },
                         { data: failedAttemptsCount, stack: "a" },
                     ]}
+                    xAxis={[
+                        {
+                            scaleType: "band",
+                            data: [...ids],
+
+                            tickPlacement: "middle",
+                        },
+                    ]}
                     yAxis={[{ tickMinStep: 1, label: "Количество" }]}
                 />
-                <Column maxHeight={"600px"} overflow={"scroll"}>
+                <Column
+                    maxHeight={"270px"}
+                    overflow={"scroll"}
+                    position={"relative"}
+                >
                     <table>
-                        <thead>
+                        <thead style={{ top: 0, left: 0 }}>
                             <tr>
-                                <th>Имя пользователя</th>
-                                <th>Номер упражнения</th>
-                                <th>Количество ошибок</th>
-                                <th>Среднее время нажатия на клавишу, с</th>
-                                <th>Дата прохождения</th>
+                                <th style={headerStyle}>Имя пользователя</th>
+                                <th style={headerStyle}>Номер упражнения</th>
+                                <th style={headerStyle}>Количество ошибок</th>
+                                <th style={headerStyle}>
+                                    {" "}
+                                    Среднее время нажатия на клавишу, с
+                                </th>
+                                <th style={headerStyle}>Дата прохождения</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -130,4 +167,29 @@ function listToMap(list: Exercise[]): Map<number, Exercise> {
     const map = new Map<number, Exercise>();
     list.forEach((e) => map.set(e.id, e));
     return map;
+}
+
+function prepareData(stats: AdminStat[]) {
+    const time: Record<
+        string,
+        { time: number; count: number; errors: number }
+    > = {};
+
+    for (let stat of stats) {
+        if (time[stat.exerciseId] == null) {
+            time[stat.exerciseId] = {
+                time: 0,
+                count: 0,
+                errors: 0,
+            };
+        }
+        time[stat.exerciseId].time += stat.time;
+        time[stat.exerciseId].count += 1;
+        time[stat.exerciseId].errors += stat.errors;
+    }
+
+    return Object.entries(time).map(
+        ([id, { time, count, errors }]) =>
+            [id, { time: time / count, errors }] as const
+    );
 }

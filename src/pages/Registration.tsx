@@ -12,8 +12,11 @@ type RegisterForm = {
 };
 
 export function Registration() {
-    const { register, handleSubmit } = useForm<RegisterForm>();
+    const { register, handleSubmit, formState } = useForm<RegisterForm>();
+    const errors = formState.errors;
 
+    formState.dirtyFields.login;
+    const submitted = formState.isSubmitted;
     const nav = useNavigate();
 
     const onSubmit = (data: RegisterForm) => {
@@ -50,28 +53,50 @@ export function Registration() {
                         onSubmit={handleSubmit(onSubmit)}
                         style={{ width: "100%" }}
                     >
-                        <Column alignItems={"center"} width={300}>
+                        <Column alignItems={"center"} width={300} gap={2}>
                             <Txt variant="h4">Регистрация</Txt>
-                            <TextField
-                                {...register("login", { required: true })}
-                                sx={{
-                                    marginTop: 3,
-                                    marginBottom: 3,
-                                    width: "100%",
-                                }}
-                                label="логин"
-                                size="small"
-                            />
-                            <TextField
-                                {...register("password", { required: true })}
-                                sx={{ width: "100%" }}
-                                label="пароль"
-                                type="password"
-                                size="small"
-                            />
+                            <Column width={"100%"}>
+                                <TextField
+                                    error={!!errors.login && submitted}
+                                    {...register("login", {
+                                        required: true,
+                                        minLength: 4,
+                                        maxLength: 8,
+                                    })}
+                                    sx={{
+                                        marginTop: 3,
+                                        width: "100%",
+                                    }}
+                                    label="логин"
+                                    size="small"
+                                />
+                                {errors.login ? (
+                                    <Txt>длина от 4 до 8 символов</Txt>
+                                ) : (
+                                    ""
+                                )}
+                            </Column>
+                            <Column width={"100%"}>
+                                <TextField
+                                    {...register("password", {
+                                        required: true,
+                                        minLength: 4,
+                                        maxLength: 10,
+                                    })}
+                                    sx={{ width: "100%" }}
+                                    label="пароль"
+                                    type="password"
+                                    size="small"
+                                />
+                                {errors.password ? (
+                                    <Txt>длина от 4 до 10 символов</Txt>
+                                ) : (
+                                    ""
+                                )}
+                            </Column>
                             <Row width="100%">
                                 <Button
-                                    sx={{ marginTop: 3, flex: 1 }}
+                                    sx={{ flex: 1 }}
                                     variant="contained"
                                     type="submit"
                                 >
