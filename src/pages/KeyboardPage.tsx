@@ -55,7 +55,7 @@ export function KeyboardInputTest() {
             if (path === "/keyboard/" + id) {
                 nav("/exercises");
             }
-        }, 2000);
+        }, 3500);
     };
 
     useEffect(() => {
@@ -100,6 +100,7 @@ export function KeyboardInputTest() {
             exerciseId: +id!,
             time: timer,
         });
+        scheduleReturn();
         stop();
     }, [tooLong]);
 
@@ -169,7 +170,9 @@ export function KeyboardInputTest() {
                 {tooLong && !manyErrors() && (
                     <Modal message={<PressFaster />} />
                 )}
-                {manyErrors() && <Modal message={Error("Не надо ошибаться")} />}
+                {manyErrors() && (
+                    <Modal message={Error("Превышен лимит ошибок")} />
+                )}
                 {exampleText.length === value.length && (
                     <Modal message={<GoodJob />} />
                 )}
@@ -278,13 +281,13 @@ function GoodJob() {
                 color: "#012300",
             }}
         >
-            {"великолепно"}
+            {"Упражнение пройдено успешно. Вы великолепны"}
         </div>
     );
 }
 
 function PressFaster() {
-    return Error("бля");
+    return Error("нажимай быстрее");
 }
 
 function Modal(props: { message: JSX.Element }) {
