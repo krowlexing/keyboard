@@ -98,6 +98,10 @@ export function KeyboardInputTest() {
 
     const cancelReturn = () => {};
 
+    const manyErrors = () => {
+        return errors > 0 && errors >= maxErrors;
+    };
+
     const onEnd = (text: string) => {
         let errors = countErrors(text, exampleText);
         network.stats.create({
@@ -119,7 +123,7 @@ export function KeyboardInputTest() {
             return;
         }
         if (
-            errors >= maxErrors ||
+            manyErrors() ||
             (exampleText.length > 0 && value.length === exampleText.length)
         ) {
             setDisabled(true);
@@ -153,7 +157,10 @@ export function KeyboardInputTest() {
                 paddingTop={10}
                 position={"relative"}
             >
-                {tooLong && <Modal message={<PressFaster />} />}
+                {tooLong && !manyErrors() && (
+                    <Modal message={<PressFaster />} />
+                )}
+                {manyErrors() && <Modal message={Error("Не надо ошибаться")} />}
                 {exampleText.length === value.length && (
                     <Modal message={<GoodJob />} />
                 )}
