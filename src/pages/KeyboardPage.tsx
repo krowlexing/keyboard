@@ -13,11 +13,9 @@ import { getExerciseDuration, prettyTime } from "../utils";
 import { DifficultyData } from "../dto/diff";
 import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 
-interface Props {}
-
 let audio = new Audio("/погоня.mp3");
 
-export function KeyboardInputTest(props: Props) {
+export function KeyboardInputTest() {
     const { id } = useParams();
 
     const [exampleText, setExampleText] = useState("");
@@ -39,9 +37,12 @@ export function KeyboardInputTest(props: Props) {
         difficulties.length > 0
             ? getExerciseDuration(difficulties[difficulty - 1], exampleText)
             : 120;
-    const [timer, start, stop] = useTimer(defaultTime, () => {
+    const [timer, start, stop, { resume }] = useTimer(defaultTime, () => {
         setDisabled(true);
     });
+
+    const keyPressTimer = useState(0);
+    const [tooLong, setTooLong] = useState(false);
 
     const errors = countErrors(value, exampleText);
 
@@ -67,6 +68,32 @@ export function KeyboardInputTest(props: Props) {
         }
     }, [playAudio]);
 
+    useEffect(() => {
+        if (
+            value.length === 0 ||
+            tooLong ||
+            value.length === exampleText.length
+        ) {
+            return;
+        }
+
+        if (value.length === 1) {
+            resume();
+            start();
+        }
+
+        const timeout = setTimeout(() => {
+            setTooLong(true);
+        }, 300);
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [value]);
+
+    useEffect(() => {
+        stop();
+    }, [tooLong]);
+
     const nextKey = getNextKey(value, exampleText);
 
     const cancelReturn = () => {};
@@ -84,18 +111,17 @@ export function KeyboardInputTest(props: Props) {
     };
 
     useEffect(() => {
-        start();
         setDisabled(false);
-        return () => {
-            stop();
-        };
     }, []);
 
     useEffect(() => {
         if (exampleText.length === 0) {
             return;
         }
-        if (errors >= maxErrors || value.length === exampleText.length) {
+        if (
+            errors >= maxErrors ||
+            (exampleText.length > 0 && value.length === exampleText.length)
+        ) {
             setDisabled(true);
             stop();
             onEnd(value);
@@ -125,7 +151,12 @@ export function KeyboardInputTest(props: Props) {
                 paddingLeft={20}
                 paddingRight={20}
                 paddingTop={10}
+                position={"relative"}
             >
+                {tooLong && <Modal message={<PressFaster />} />}
+                {exampleText.length === value.length && (
+                    <Modal message={<GoodJob />} />
+                )}
                 <Row justifyContent={"space-between"} fontSize={"1.5rem"}>
                     <ArrowBack
                         sx={{ width: 50, height: 30 }}
@@ -202,4 +233,58 @@ function getNextKey(value: string, exampleText: string): string {
     const length = Math.min(value.length, exampleText.length);
     const char = exampleText[length];
     return char == " " ? "spacebar" : char;
+}
+
+function Error(text: string) {
+    return (
+        <div
+            style={{
+                padding: "20px",
+                background: "#e8556b",
+                border: "1px solid #35050d",
+                borderRadius: "5px",
+                color: "#4f040f",
+            }}
+        >
+            {text}
+        </div>
+    );
+}
+
+function GoodJob() {
+    return (
+        <div
+            style={{
+                padding: "20px",
+                background: "#65bc71",
+                border: "1px solid #35050d",
+                borderRadius: "5px",
+                color: "#012300",
+            }}
+        >
+            {"великолепно"}
+        </div>
+    );
+}
+
+function PressFaster() {
+    return Error("нажимай быстрее");
+}
+
+function Modal(props: { message: JSX.Element }) {
+    return (
+        <div
+            style={{
+                top: 10,
+                left: 0,
+                width: "100%",
+                justifyContent: "center",
+                display: "flex",
+                position: "absolute",
+            }}
+        >
+            {" "}
+            {props.message}
+        </div>
+    );
 }
