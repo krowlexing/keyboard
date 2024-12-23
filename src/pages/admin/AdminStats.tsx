@@ -29,7 +29,12 @@ export function AdminStats(props: Props) {
         network.exercises.getForLevel(difficulty).then(setExercises);
     }, [difficulty]);
 
-    if (exercises == null || stats == null || diffSettings == null) {
+    if (
+        exercises == null ||
+        stats == null ||
+        exercisesList == null ||
+        diffSettings == null
+    ) {
         return (
             <AdminSkeleton selected="stats">
                 <Stack direction="row">
@@ -59,11 +64,21 @@ export function AdminStats(props: Props) {
     const attemptMap = groupByExercise(stats);
     const attempts = sortById(attemptMap);
 
+    console.dir(attempts);
+
     const goodAttempts = attempts.map((exercise) =>
-        exercise.filter((stat) => stat.errors < diffSettings.errors)
+        exercise.filter(
+            (stat) =>
+                (stat.errors === 0 || stat.errors < diffSettings.errors) &&
+                stat.chars === exercises.get(stat.exerciseId)!.text.length
+        )
     );
     const failedAttempts = attempts.map((exercise) =>
-        exercise.filter((stat) => stat.errors >= diffSettings.errors)
+        exercise.filter(
+            (stat) =>
+                (stat.errors > 0 && stat.errors >= diffSettings.errors) ||
+                stat.chars !== exercises.get(stat.exerciseId)!.text.length
+        )
     );
 
     const goodAttemptsCount = goodAttempts.map((exercise) => exercise.length);
@@ -93,10 +108,25 @@ export function AdminStats(props: Props) {
             >
                 <Txt paddingTop={4}>Статистика по упражнениям</Txt>
                 <BarChart
+                    slotProps={{
+                        legend: {
+                            direction: "row",
+                            position: { vertical: "top", horizontal: "middle" },
+                            padding: 0,
+                        },
+                    }}
                     height={500}
                     series={[
-                        { data: goodAttemptsCount, stack: "a" },
-                        { data: failedAttemptsCount, stack: "a" },
+                        {
+                            data: goodAttemptsCount,
+                            label: "хорошо",
+                            stack: "a",
+                        },
+                        {
+                            data: failedAttemptsCount,
+                            label: "плохо",
+                            stack: "a",
+                        },
                     ]}
                     xAxis={[
                         {
@@ -130,7 +160,11 @@ export function AdminStats(props: Props) {
                             {stats?.map((s) => (
                                 <tr key={s.id}>
                                     <td>{s.username}</td>
-                                    <td>{s.id}</td>
+                                    <td>
+                                        {exercisesList2.findIndex(
+                                            (e) => e.id === s.exerciseId
+                                        ) + 1}
+                                    </td>
                                     <td>{s.errors}</td>
                                     <td>
                                         {Math.floor((s.time * 100) / s.chars) /
@@ -160,7 +194,9 @@ function groupByExercise(stats: AdminStat[]): Map<number, AdminStat[]> {
 }
 
 function sortById(map: Map<number, AdminStat[]>): AdminStat[][] {
-    return Array.from(map.values()).sort((a, b) => a[0].id - b[0].id);
+    return Array.from(map.values()).sort(
+        (a, b) => a[0].exerciseId - b[0].exerciseId
+    );
 }
 
 function listToMap(list: Exercise[]): Map<number, Exercise> {
