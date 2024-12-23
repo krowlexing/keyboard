@@ -84,11 +84,11 @@ export function KeyboardInputTest() {
 
         const timeout = setTimeout(() => {
             setTooLong(true);
-        }, 300);
+        }, difficulties[difficulty - 1].timeLimit * 1000);
         return () => {
             clearTimeout(timeout);
         };
-    }, [value]);
+    }, [value, difficulties, difficulty]);
 
     useEffect(() => {
         stop();
