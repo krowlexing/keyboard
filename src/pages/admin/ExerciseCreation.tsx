@@ -110,7 +110,7 @@ export function ExerciseCreation() {
                                     background: "lightpink",
                                 }}
                             >
-                                Длина плохая
+                                Некорректная длина
                             </Paper>
                         ) : (
                             <></>

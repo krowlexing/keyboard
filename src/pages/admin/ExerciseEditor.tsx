@@ -130,7 +130,7 @@ export function ExerciseEditor() {
                                     background: "lightpink",
                                 }}
                             >
-                                Длина плохая
+                                Некорректная длина
                             </Paper>
                         ) : (
                             <></>
