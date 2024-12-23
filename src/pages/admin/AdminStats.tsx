@@ -119,12 +119,12 @@ export function AdminStats(props: Props) {
                     series={[
                         {
                             data: goodAttemptsCount,
-                            label: "хорошо",
+                            label: "Успешные попытки",
                             stack: "a",
                         },
                         {
                             data: failedAttemptsCount,
-                            label: "плохо",
+                            label: "Неуспешные попытки",
                             stack: "a",
                         },
                     ]}

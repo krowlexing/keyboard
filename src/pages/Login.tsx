@@ -55,7 +55,7 @@ export function Login() {
                         onSubmit={handleSubmit(onSubmit)}
                         style={{ width: "100%" }}
                     >
-                        <Column alignItems={"center"} width={300}>
+                        <Column alignItems={"center"} width={300} gap={3}>
                             <Txt variant="h4">Авторизация</Txt>
                             <Column width={"100%"}>
                                 <TextField

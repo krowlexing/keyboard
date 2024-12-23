@@ -24,6 +24,8 @@ export function KeyboardInputTest() {
     const [difficulties, setDifficulties] = useState<DifficultyData[]>([]);
     const [difficulty, setDifficulty] = useState(1);
 
+    difficulties.reverse();
+
     const [keyboardHidden, setKeyboardHidden] = useState(false);
     const [playAudio, setPlayAudio] = useState(false);
 
@@ -35,8 +37,9 @@ export function KeyboardInputTest() {
 
     const defaultTime =
         difficulties.length > 0
-            ? getExerciseDuration(difficulties[difficulty - 1], exampleText)
+            ? getExerciseDuration(difficulties[5 - difficulty], exampleText)
             : 120;
+
     const [timer, start, stop, { resume }] = useTimer(defaultTime, () => {
         setDisabled(true);
     });
@@ -91,6 +94,12 @@ export function KeyboardInputTest() {
     }, [value, difficulties, difficulty]);
 
     useEffect(() => {
+        network.stats.create({
+            chars: value.length,
+            errors: errors,
+            exerciseId: +id!,
+            time: timer,
+        });
         stop();
     }, [tooLong]);
 
@@ -145,7 +154,7 @@ export function KeyboardInputTest() {
     if (id == null || difficulties.length == 0) {
         return <div>а где id....</div>;
     }
-    const maxErrors = difficulties[difficulty - 1].errors;
+    const maxErrors = difficulties[5 - difficulty].errors;
 
     return (
         <Skeleton selected="exercises">
@@ -275,7 +284,7 @@ function GoodJob() {
 }
 
 function PressFaster() {
-    return Error("нажимай быстрее");
+    return Error("бля");
 }
 
 function Modal(props: { message: JSX.Element }) {
