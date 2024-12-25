@@ -22,7 +22,7 @@ export class StatsNetwork extends AbstractSubNetwork {
         );
         return response.data.map((v) => ({
             ...v,
-            time: v.time / 10,
+            time: v.time / 100,
         }));
     }
 

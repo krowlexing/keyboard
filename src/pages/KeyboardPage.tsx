@@ -40,6 +40,7 @@ export function KeyboardInputTest() {
 
     const [timer, start, stop, { resume }] = useTimer(defaultTime * 10, () => {
         setDisabled(true);
+        scheduleReturn();
     });
 
     const keyPressTimer = useState(0);
@@ -145,6 +146,7 @@ export function KeyboardInputTest() {
                 {manyErrors() && (
                     <Modal message={Error("Превышен лимит ошибок")} />
                 )}
+                {timer <= 0 && <Modal message={Error("Время вышло")} />}
                 {exampleText.length === value.length && (
                     <Modal message={<GoodJob />} />
                 )}

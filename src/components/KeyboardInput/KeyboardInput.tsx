@@ -44,6 +44,7 @@ export function KeyboardInput(props: Props) {
                 <InvisibleInput
                     ref={inputElement}
                     value={value}
+                    autoFocus={true}
                     disabled={!allowInput}
                     onChange={(e) => {
                         props.onInput?.(e.target.value);
