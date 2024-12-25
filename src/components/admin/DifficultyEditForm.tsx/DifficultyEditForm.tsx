@@ -159,23 +159,30 @@ export function DifficultyEditForm(props: DifficultyProps) {
                 </Typography>
             )}
         </>,
-        <Input
-            key={labels[3]}
-            label={labels[3]}
-            id={"time"}
-            props={register("time", {
-                valueAsNumber: true,
-                min: {
-                    value: 0.5,
-                    message: "Минимальное значение должно быть >= 0.5",
-                },
-                required: true,
-                max: {
-                    value: 1.5,
-                    message: "Максимальное значение должно быть <= 1.5",
-                },
-            })}
-        />,
+        <>
+            <Input
+                key={labels[3]}
+                label={labels[3]}
+                id={"time"}
+                props={register("time", {
+                    valueAsNumber: true,
+                    min: {
+                        value: 0.5,
+                        message: "Минимальное значение должно быть >= 0.5",
+                    },
+                    required: true,
+                    max: {
+                        value: 1.5,
+                        message: "Максимальное значение должно быть <= 1.5",
+                    },
+                })}
+            />
+            {formErrors.time !== undefined && (
+                <Typography color={"red"} marginLeft={3}>
+                    {formErrors.time.message}
+                </Typography>
+            )}
+        </>,
     ];
     const boxes = zonesLabels.map((zone, index) => {
         return (
