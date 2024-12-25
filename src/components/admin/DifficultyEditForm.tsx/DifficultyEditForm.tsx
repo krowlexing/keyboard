@@ -95,7 +95,7 @@ export function DifficultyEditForm(props: DifficultyProps) {
                     required: true,
                     max: {
                         value: 200,
-                        message: "Минимальное значение должно быть меньше 200",
+                        message: "Максимальное значение должно быть меньше 200",
                     },
                     validate: (value, form) => {
                         return (
@@ -135,26 +135,45 @@ export function DifficultyEditForm(props: DifficultyProps) {
                 </Typography>
             )}
         </>,
-        <Input
-            key={labels[2]}
-            label={labels[2]}
-            id={"errors"}
-            props={register("errors", {
-                valueAsNumber: true,
-                min: 0,
-                required: true,
-                max: 100,
-            })}
-        />,
+        <>
+            <Input
+                key={labels[2]}
+                label={labels[2]}
+                id={"errors"}
+                props={register("errors", {
+                    valueAsNumber: true,
+                    min: {
+                        value: 1,
+                        message: "Минимальное значение должно быть >= 1",
+                    },
+                    required: true,
+                    max: {
+                        value: 5,
+                        message: "Максимальное значение должно быть <= 5",
+                    },
+                })}
+            />
+            {formErrors.errors !== undefined && (
+                <Typography color={"red"} marginLeft={3}>
+                    {formErrors.errors.message}
+                </Typography>
+            )}
+        </>,
         <Input
             key={labels[3]}
             label={labels[3]}
             id={"time"}
             props={register("time", {
                 valueAsNumber: true,
-                min: 0.5,
+                min: {
+                    value: 0.5,
+                    message: "Минимальное значение должно быть >= 0.5",
+                },
                 required: true,
-                max: 1.5,
+                max: {
+                    value: 1.5,
+                    message: "Максимальное значение должно быть <= 1.5",
+                },
             })}
         />,
     ];
