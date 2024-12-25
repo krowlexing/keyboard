@@ -86,8 +86,8 @@ export function ExerciseEditor() {
     const onSubmit = () => {
         if (
             validate() &&
-            (savedText.length >= difficulties[difficulty - 1].minChars ||
-                savedText.length <= difficulties[difficulty - 1].maxChars)
+            savedText.length >= difficulties[difficulty - 1].minChars &&
+            savedText.length <= difficulties[difficulty - 1].maxChars
         ) {
             updateExercise(savedText, difficulty);
         }
