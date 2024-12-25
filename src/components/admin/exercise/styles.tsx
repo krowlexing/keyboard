@@ -7,6 +7,7 @@ export const ExerciseTextInput = forwardRef((props: TextFieldProps, ref) => {
             multiline
             minRows={7}
             sx={{
+                fontSize: "2rem",
                 width: "inherit",
             }}
             {...props}

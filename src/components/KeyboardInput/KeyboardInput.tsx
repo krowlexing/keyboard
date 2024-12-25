@@ -32,6 +32,10 @@ export function KeyboardInput(props: Props) {
         );
     });
 
+    useEffect(() => {
+        inputElement.current.focus();
+    }, []);
+
     const leftover = leftoverPlaceholder(value, placeholder);
     return (
         <>
@@ -44,7 +48,6 @@ export function KeyboardInput(props: Props) {
                 <InvisibleInput
                     ref={inputElement}
                     value={value}
-                    autoFocus={true}
                     disabled={!allowInput}
                     onChange={(e) => {
                         props.onInput?.(e.target.value);

@@ -10,6 +10,7 @@ export const TextInputContainer = styled.div((props: Props) => ({
     height: "200px",
     padding: "5px",
     margin: "5px",
+    fontSize: "2rem",
 }));
 
 export const Placeholder = styled.span`
