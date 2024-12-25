@@ -158,7 +158,7 @@ export function AdminStats(props: Props) {
                                 <th style={headerStyle}>Дата прохождения</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style={{ textAlign: "center" }}>
                             {stats?.map((s) => (
                                 <tr key={s.id}>
                                     <td>{s.username}</td>

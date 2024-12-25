@@ -102,15 +102,19 @@
                 color: #ffffff;
             }
 
-            #scrollToTop {
+            #scrollTop {
                 position: fixed;
-                bottom: 100px;
-                right: 100px;
-                width: 50px;
-                height: 50px;
+                bottom: 20px;
+                right: 60px;
+                width: 40px;
+                height: 40px;
+                background-color: #000000;
+                color: #ffffff;
+                text-align: center;
+                line-height: 35px;
                 cursor: pointer;
-                opacity: 1;
-                transition: all 0.5s ease-in;
+                display: none;
+                font-size: 24px;
             }
         </style>
     </head>
@@ -118,7 +122,7 @@
     <body>
         <main>
             <div class="about">
-                <div class="container">
+                <div class="container" #top>
                     <h1 class="subheading">Сведения о системе</h1>
                     <p>
                         Клавиатурный тренажер представляет собой
@@ -131,7 +135,6 @@
                         <li><a href="#1">Страница "Упражнения"</a></li>
                         <li><a href="#2">Прохождение упражнения</a></li>
                         <li><a href="#3">Страница "Статистика"</a></li>
-                        <li><a href="#4">Справочкая информация</a></li>
                     </ul>
 
                     <h2><a name="1">Страница "Упражнения"</a></h2>
@@ -143,7 +146,7 @@
                         выполнения упражнения. У успешно пройденных упражненений
                         на карточке отображено лучшее время прохождения.
                     </p>
-                    <img class="image-about" src="img/1.png" />
+                    <img class="image-about" src="img/1.jpg" />
 
                     <h2><a name="2">Прохождение упражнения</a></h2>
                     <p>
@@ -156,7 +159,7 @@
                         клавиатуры и звуковое сопровождение. Обратный отсчет
                         времени начинается с момента ввода первого символа.
                     </p>
-                    <img class="image-about" src="img/2.png" />
+                    <img class="image-about" src="img/2.jpg" />
 
                     <h2><a name="3">Страница "Статистика"</a></h2>
                     <p>
@@ -167,17 +170,38 @@
                         упражнения. Уровень сложности можно выбрать в левой
                         панели.
                     </p>
-                    <img class="image-about" src="img/3.png" />
-
-                    <h2><a name="4">Справочная информация</a></h2>
-                    <p>
-                        Нажав на кнопку "Справочная информация", появится меню,
-                        где пользователь сможет выбрать и затем просмотреть
-                        нужные ему сведения.
-                    </p>
-                    <img class="image-about" src="img/4.png" />
+                    <img class="image-about" src="img/3.jpg" />
+                    <div id="scrollTop">&uarr;</div>
                 </div>
             </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const scrollTopButton =
+                        document.getElementById("scrollTop");
+                    const footer = document.querySelector("footer");
+                    window.addEventListener("scroll", () => {
+                        if (window.scrollY > 300) {
+                            scrollTopButton.style.display = "block";
+                        } else {
+                            scrollTopButton.style.display = "none";
+                        }
+
+                        const footerRect = footer.getBoundingClientRect();
+                        const windowHeight = window.innerHeight;
+
+                        if (footerRect.top < windowHeight) {
+                            const overlap = windowHeight - footerRect.top + 30;
+                            scrollTopButton.style.bottom = `${overlap}px`;
+                        } else {
+                            scrollTopButton.style.bottom = "20px";
+                        }
+                    });
+
+                    scrollTopButton.addEventListener("click", () => {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                    });
+                });
+            </script>
         </main>
     </body>
 </html>

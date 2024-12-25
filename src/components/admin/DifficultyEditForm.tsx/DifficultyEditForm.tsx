@@ -219,7 +219,7 @@ export function DifficultyEditForm(props: DifficultyProps) {
                     <Table>
                         {formErrors.zones?.[0] !== undefined && (
                             <Typography color={"red"} marginLeft={3}>
-                                Выберите хотя бы еще одну зону
+                                Выберите еще хотя бы одну зону
                             </Typography>
                         )}
                         <tbody>{boxes}</tbody>

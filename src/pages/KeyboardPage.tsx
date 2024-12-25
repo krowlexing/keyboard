@@ -40,14 +40,19 @@ export function KeyboardInputTest() {
 
     const [timer, start, stop, { resume }] = useTimer(defaultTime * 10, () => {
         setDisabled(true);
-        network.stats.create({
-            exerciseId: +id!,
-            chars: value.length,
-            time: defaultTime - timer / 10,
-            errors: countErrors(value, exampleText),
-        });
-        scheduleReturn();
     });
+
+    useEffect(() => {
+        if (Math.floor(timer) === 0) {
+            network.stats.create({
+                exerciseId: +id!,
+                chars: value.length,
+                time: defaultTime - timer / 10,
+                errors: countErrors(value, exampleText),
+            });
+            scheduleReturn();
+        }
+    }, [timer]);
 
     const keyPressTimer = useState(0);
 
