@@ -65,9 +65,6 @@ export function Login() {
             height={"100vh"}
         >
             <Row justifyContent={"center"} position={"relative"}>
-                {showError && (
-                    <Modal message={Error("Неверный логин или пароль")} />
-                )}
                 <Paper sx={{ padding: 7 }}>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
@@ -131,6 +128,13 @@ export function Login() {
                                     <></>
                                 )}
                             </Column>
+                            <Row>
+                                {showError && (
+                                    <Txt color={"red"}>
+                                        Неверный логин или пароль
+                                    </Txt>
+                                )}
+                            </Row>
                             <Row width="100%">
                                 <Button
                                     sx={{ marginTop: 3, flex: 1 }}

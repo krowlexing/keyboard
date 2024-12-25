@@ -6,6 +6,7 @@ export const ExerciseTextInput = forwardRef((props: TextFieldProps, ref) => {
         <TextField
             InputProps={{
                 sx: {
+                    whiteSpace: "break-spaces",
                     fontSize: "2rem",
                 },
                 // fontSize: "2rem",

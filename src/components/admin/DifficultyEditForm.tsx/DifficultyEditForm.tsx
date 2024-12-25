@@ -191,7 +191,11 @@ export function DifficultyEditForm(props: DifficultyProps) {
                 label={zone}
                 inputProps={register(`zones.${index}` as any, {
                     validate: (_value, form) => {
-                        return form.zones.includes(true);
+                        let sum = form.zones
+                            .map((x) => (x ? 1 : 0))
+                            .reduce((a: number, b: number) => a + b, 0);
+
+                        return sum >= 2 || (sum == 1 && !form.zones[4]);
                     },
                 })}
             />
@@ -215,7 +219,7 @@ export function DifficultyEditForm(props: DifficultyProps) {
                     <Table>
                         {formErrors.zones?.[0] !== undefined && (
                             <Typography color={"red"} marginLeft={3}>
-                                Выберите хотя бы одну зону
+                                Выберите хотя бы еще одну зону
                             </Typography>
                         )}
                         <tbody>{boxes}</tbody>
