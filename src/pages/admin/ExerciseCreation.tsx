@@ -12,6 +12,7 @@ import { set, useForm } from "react-hook-form";
 import { DifficultyData, zones as zonesArray } from "../../dto/diff.ts";
 import { zones } from "../../data/keys.ts";
 import { useAdmin } from "../../utils/index.ts";
+import { AxiosError } from "axios";
 
 export function ExerciseCreation() {
     const [manual, setManual] = useState(true);
@@ -24,6 +25,7 @@ export function ExerciseCreation() {
 
     const [invalidLength, setInvalidLength] = useState(false);
 
+    const [showTooManyExercises, setShowTooManyExercises] = useState(false);
     const [invalid, setInvalid] = useState(false);
 
     useEffect(() => {
@@ -32,6 +34,19 @@ export function ExerciseCreation() {
             setLength(diff[0].minChars);
         });
     }, []);
+
+    useEffect(() => {
+        if (showTooManyExercises) {
+            const timeout = setTimeout(() => {
+                setShowTooManyExercises(false);
+            }, 4000);
+            return () => {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+            };
+        }
+    }, [showTooManyExercises]);
 
     useEffect(() => {
         if (invalidLength) {
@@ -82,6 +97,11 @@ export function ExerciseCreation() {
             .create(text, level)
             .then(() => {})
             .catch((error) => {
+                if (error instanceof AxiosError) {
+                    if (error.status === 418) {
+                        setShowTooManyExercises(true);
+                    }
+                }
                 console.log(error);
             });
     };
@@ -99,6 +119,25 @@ export function ExerciseCreation() {
                         alignItems="center"
                         margin="10px"
                     >
+                        {showTooManyExercises ? (
+                            <Paper
+                                sx={{
+                                    position: "absolute",
+                                    top: 0,
+                                    padding: "30px 0px 30px 30px",
+                                    width: "97%",
+                                    left: 0,
+                                    zIndex: 100,
+                                    textAlign: "center",
+                                    background: "lightpink",
+                                }}
+                            >
+                                Ошибка - достигнуто максимальное количество
+                                упражнений для уровня сложности
+                            </Paper>
+                        ) : (
+                            <></>
+                        )}
                         {invalidLength ? (
                             <Paper
                                 sx={{
