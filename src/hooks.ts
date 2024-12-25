@@ -51,7 +51,7 @@ export function useTimer(time: number, onEnd: () => void) {
             if (timer <= 0 || stopped) {
                 clearInterval(interval);
             }
-        }, 1000);
+        }, 100);
 
         saveInterval(interval);
         console.log("set interval " + interval);

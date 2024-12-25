@@ -1,4 +1,3 @@
-import { Exercise } from "../data/Exercise";
 import { AdminStat, NewStat, Stat } from "../dto/stats";
 import { AbstractSubNetwork } from "./abstract_network";
 
@@ -9,17 +8,32 @@ export class StatsNetwork extends AbstractSubNetwork {
     }
 
     async create(newStat: NewStat) {
-        const response = await this.axios().post("/stats", newStat);
-        return response.data;
+        const v = newStat;
+        const response = await this.axios().post("/stats", {
+            ...v,
+            time: v.time,
+        });
+        return response;
     }
 
     async getForLevel(level: number): Promise<Stat[]> {
         const response = await this.axios().get("/stats/level/" + level);
-        return response.data;
+        const v = response.data;
+        return {
+            ...v,
+            time: v.time / 10,
+        };
     }
 
     async getAll(difficulty: number): Promise<AdminStat[]> {
-        const response = await this.axios().get("/stats/diff/" + difficulty);
-        return response.data;
+        const response = await this.axios().get<AdminStat[]>(
+            "/stats/diff/" + difficulty
+        );
+        return response.data.map((v) => {
+            return {
+                ...v,
+                time: v.time / 10,
+            };
+        });
     }
 }

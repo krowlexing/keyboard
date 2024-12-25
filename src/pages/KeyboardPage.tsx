@@ -40,12 +40,11 @@ export function KeyboardInputTest() {
             ? getExerciseDuration(difficulties[5 - difficulty], exampleText)
             : 120;
 
-    const [timer, start, stop, { resume }] = useTimer(defaultTime, () => {
+    const [timer, start, stop, { resume }] = useTimer(defaultTime * 10, () => {
         setDisabled(true);
     });
 
     const keyPressTimer = useState(0);
-    const [tooLong, setTooLong] = useState(false);
 
     const errors = countErrors(value, exampleText);
 
@@ -72,11 +71,7 @@ export function KeyboardInputTest() {
     }, [playAudio]);
 
     useEffect(() => {
-        if (
-            value.length === 0 ||
-            tooLong ||
-            value.length === exampleText.length
-        ) {
+        if (value.length === 0 || value.length === exampleText.length) {
             return;
         }
 
@@ -84,25 +79,7 @@ export function KeyboardInputTest() {
             resume();
             start();
         }
-
-        const timeout = setTimeout(() => {
-            setTooLong(true);
-        }, difficulties[difficulty - 1].timeLimit * 1000);
-        return () => {
-            clearTimeout(timeout);
-        };
     }, [value, difficulties, difficulty]);
-
-    useEffect(() => {
-        network.stats.create({
-            chars: value.length,
-            errors: errors,
-            exerciseId: +id!,
-            time: timer,
-        });
-        scheduleReturn();
-        stop();
-    }, [tooLong]);
 
     const nextKey = getNextKey(value, exampleText);
 
@@ -117,7 +94,7 @@ export function KeyboardInputTest() {
         network.stats.create({
             exerciseId: +id!,
             chars: text.length,
-            time: defaultTime - timer,
+            time: defaultTime - timer / 10,
             errors,
         });
 
@@ -167,9 +144,6 @@ export function KeyboardInputTest() {
                 paddingTop={10}
                 position={"relative"}
             >
-                {tooLong && !manyErrors() && (
-                    <Modal message={<PressFaster />} />
-                )}
                 {manyErrors() && (
                     <Modal message={Error("Превышен лимит ошибок")} />
                 )}
@@ -184,7 +158,7 @@ export function KeyboardInputTest() {
                     <div>
                         Количество символов: {value.length}/{exampleText.length}
                     </div>
-                    <Timer time={prettyTime(timer)} />
+                    <Timer time={prettyTime(timer / 10)} />
                     <div>
                         Количество ошибок: {errors}/{maxErrors}
                     </div>

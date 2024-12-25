@@ -130,9 +130,9 @@ export function DifficultyEditForm(props: DifficultyProps) {
             id={"time"}
             props={register("time", {
                 valueAsNumber: true,
-                min: 1,
+                min: 0.5,
                 required: true,
-                max: 10,
+                max: 1.5,
             })}
         />,
     ];
@@ -194,7 +194,20 @@ type Props = {
     props: UseFormRegisterReturn<keyof DifficultyFormData>;
 };
 
-const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Backspace"];
+const numbers = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "0",
+    "Backspace",
+    ".",
+];
 
 const Input = forwardRef(
     (props: Props, ref: ForwardedRef<HTMLInputElement>) => {
