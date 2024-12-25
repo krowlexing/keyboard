@@ -4,6 +4,12 @@ import { forwardRef } from "react";
 export const ExerciseTextInput = forwardRef((props: TextFieldProps, ref) => {
     return (
         <TextField
+            InputProps={{
+                sx: {
+                    fontSize: "2rem",
+                },
+                // fontSize: "2rem",
+            }}
             multiline
             minRows={7}
             sx={{
