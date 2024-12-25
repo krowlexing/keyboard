@@ -26,6 +26,8 @@ export function ExerciseCreation() {
     const [invalidLength, setInvalidLength] = useState(false);
 
     const [showTooManyExercises, setShowTooManyExercises] = useState(false);
+
+    const [showGood, setShowGood] = useState(false);
     const [invalid, setInvalid] = useState(false);
 
     useEffect(() => {
@@ -47,6 +49,19 @@ export function ExerciseCreation() {
             };
         }
     }, [showTooManyExercises]);
+
+    useEffect(() => {
+        if (showGood) {
+            const timeout = setTimeout(() => {
+                setShowGood(false);
+            }, 4000);
+            return () => {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+            };
+        }
+    });
 
     useEffect(() => {
         if (invalidLength) {
@@ -95,11 +110,15 @@ export function ExerciseCreation() {
     const createExercise = (text: string, level: number) => {
         return network.exercises
             .create(text, level)
-            .then(() => {})
+            .then(() => {
+                setShowGood(true);
+                setShowTooManyExercises(false);
+            })
             .catch((error) => {
                 if (error instanceof AxiosError) {
                     if (error.status === 418) {
                         setShowTooManyExercises(true);
+                        setShowGood(false);
                     }
                 }
                 console.log(error);
@@ -119,6 +138,24 @@ export function ExerciseCreation() {
                         alignItems="center"
                         margin="10px"
                     >
+                        {showGood ? (
+                            <Paper
+                                sx={{
+                                    position: "absolute",
+                                    top: 0,
+                                    padding: "30px 0px 30px 30px",
+                                    width: "97%",
+                                    left: 0,
+                                    zIndex: 100,
+                                    textAlign: "center",
+                                    background: "lightgreen",
+                                }}
+                            >
+                                Упражнение успешно создано
+                            </Paper>
+                        ) : (
+                            <></>
+                        )}
                         {showTooManyExercises ? (
                             <Paper
                                 sx={{
