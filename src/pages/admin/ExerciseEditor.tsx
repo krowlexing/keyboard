@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router";
 import { Txt } from "../../utils/styles.tsx";
 import { DifficultyData } from "../../dto/diff.ts";
 import { validateText } from "./ExerciseCreation.tsx";
+import { useAdmin } from "../../utils/index.ts";
 
 export function ExerciseEditor() {
     const { id } = useParams();
@@ -79,6 +80,7 @@ export function ExerciseEditor() {
             });
         }
     }, [id]);
+    useAdmin();
 
     if (id == null) {
         return (

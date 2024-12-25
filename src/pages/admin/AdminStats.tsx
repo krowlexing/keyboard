@@ -8,6 +8,7 @@ import { Exercise } from "../../data/Exercise";
 import { Column, Txt } from "../../utils/styles";
 import { DifficultyData } from "../../dto/diff";
 import { BarChart } from "@mui/x-charts";
+import { useAdmin } from "../../utils";
 
 interface Props {}
 
@@ -28,6 +29,7 @@ export function AdminStats(props: Props) {
         network.stats.getAll(difficulty).then(setStats);
         network.exercises.getForLevel(difficulty).then(setExercises);
     }, [difficulty]);
+    useAdmin();
 
     if (
         exercises == null ||

@@ -8,6 +8,7 @@ import { EditableLevelCard } from "../../components/LevelCard/EditableLevelCard"
 import { Exercise } from "../../data/Exercise";
 import { network } from "../../network/network";
 import { Txt } from "../../utils/styles";
+import { useAdmin } from "../../utils";
 
 interface Props {}
 
@@ -21,6 +22,7 @@ export function ExerciseEdit(props: Props) {
     }, [difficulty]);
 
     const nav = useNavigate();
+    useAdmin();
 
     if (exercises == null) {
         return (

@@ -11,6 +11,7 @@ import { network } from "../../network/network.ts";
 import { set, useForm } from "react-hook-form";
 import { DifficultyData, zones as zonesArray } from "../../dto/diff.ts";
 import { zones } from "../../data/keys.ts";
+import { useAdmin } from "../../utils/index.ts";
 
 export function ExerciseCreation() {
     const [manual, setManual] = useState(true);
@@ -45,6 +46,7 @@ export function ExerciseCreation() {
             };
         }
     }, [invalidLength]);
+    useAdmin();
 
     const reset = () => {
         setSavedText("");
