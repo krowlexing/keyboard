@@ -54,7 +54,6 @@ export function useAdmin() {
     if (admin === undefined) {
         nav("/auth/login");
     } else if (admin === true) {
-        nav("/admin/difficulty");
     } else {
         nav("/exercises");
     }

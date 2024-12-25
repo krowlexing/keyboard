@@ -11,18 +11,19 @@ export class StatsNetwork extends AbstractSubNetwork {
         const v = newStat;
         const response = await this.axios().post("/stats", {
             ...v,
-            time: v.time,
+            time: Math.floor(v.time * 10),
         });
         return response;
     }
 
     async getForLevel(level: number): Promise<Stat[]> {
-        const response = await this.axios().get("/stats/level/" + level);
-        const v = response.data;
-        return {
+        const response = await this.axios().get<Stat[]>(
+            "/stats/level/" + level
+        );
+        return response.data.map((v) => ({
             ...v,
             time: v.time / 10,
-        };
+        }));
     }
 
     async getAll(difficulty: number): Promise<AdminStat[]> {

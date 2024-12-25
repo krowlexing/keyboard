@@ -132,7 +132,10 @@ export function ExerciseEditor() {
                                     background: "lightpink",
                                 }}
                             >
-                                Некорректная длина
+                                Некорректная длина (должна быть от{" "}
+                                {difficulties[difficulty - 1].minChars} до{" "}
+                                {difficulties[difficulty - 1].maxChars}{" "}
+                                символов)
                             </Paper>
                         ) : (
                             <></>
@@ -146,9 +149,21 @@ export function ExerciseEditor() {
                                 difficultyError={false}
                                 onDifficultyChange={setDifficulty}
                                 onChange={(text) => {
-                                    setSavedText(text);
-
-                                    setInvalid(false);
+                                    console.log(text);
+                                    if (text.length < savedText.length) {
+                                        setSavedText(text);
+                                    } else if (
+                                        validateText(
+                                            difficulties[difficulty - 1],
+                                            text
+                                        ) &&
+                                        text.length <=
+                                            difficulties[difficulty - 1]
+                                                .maxChars
+                                    ) {
+                                        setInvalid(false);
+                                        setSavedText(text);
+                                    }
                                 }}
                                 onSave={onSubmit}
                             />

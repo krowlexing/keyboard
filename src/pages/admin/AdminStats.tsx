@@ -117,7 +117,7 @@ export function AdminStats(props: Props) {
                             padding: 0,
                         },
                     }}
-                    height={500}
+                    height={400}
                     series={[
                         {
                             data: goodAttemptsCount,
@@ -169,8 +169,11 @@ export function AdminStats(props: Props) {
                                     </td>
                                     <td>{s.errors}</td>
                                     <td>
-                                        {Math.floor((s.time * 100) / s.chars) /
-                                            100}
+                                        {s.chars === 0
+                                            ? 0
+                                            : Math.floor(
+                                                  (s.time * 100) / s.chars
+                                              ) / 100}
                                     </td>
                                     <td>{s.created.substring(0, 10)}</td>
                                 </tr>

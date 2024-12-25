@@ -1,7 +1,7 @@
-import { Stack, Typography, TextField } from "@mui/material";
+import { Stack, Typography, TextField, Paper } from "@mui/material";
 import { ExerciseTextInput, GenerateButton, SaveButton } from "./styles";
 import { groups, zones } from "../../../data/keys";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { network } from "../../../network/network";
 import { useNavigate } from "react-router";
 import { DifficultyData, zones as fromZones } from "../../../dto/diff";
@@ -23,9 +23,31 @@ export function AutomaticForm(props: Props) {
 
     const allowedZones = fromZones(difficulties[difficulty - 1].zones);
     const nav = useNavigate();
+    const [generateError, setGenerateError] = useState("");
+
+    useEffect(() => {
+        setGenerateError("");
+    }, [difficulty, length]);
 
     return (
-        <Stack direction="column" width="inherit">
+        <Stack direction="column" width="inherit" position={"relative"}>
+            {generateError ? (
+                <Paper
+                    sx={{
+                        position: "absolute",
+                        padding: "30px 0px 30px 30px",
+                        width: "97%",
+                        left: 0,
+                        zIndex: 100,
+                        textAlign: "center",
+                        background: "lightpink",
+                    }}
+                >
+                    {generateError}
+                </Paper>
+            ) : (
+                <></>
+            )}
             <ExerciseTextInput defaultValue={props.text} value={text} />
             <Stack direction="column" margin={3}>
                 <Stack
@@ -37,9 +59,11 @@ export function AutomaticForm(props: Props) {
                     <TextField
                         size="small"
                         value={length}
-                        onChange={(e) =>
-                            onLengthChange(parseInt(e.target.value))
-                        }
+                        onChange={(e) => {
+                            const int = parseInt(e.target.value);
+
+                            onLengthChange(Number.isNaN(int) ? 0 : int);
+                        }}
                         defaultValue={length}
                         sx={{ width: "5rem" }}
                     />
@@ -52,9 +76,10 @@ export function AutomaticForm(props: Props) {
                 >
                     <Typography marginRight={3}>Уровень сложности</Typography>
                     <TextField
-                        onChange={(e) =>
-                            onDifficultyChange(parseInt(e.target.value))
-                        }
+                        onChange={(e) => {
+                            const int = parseInt(e.target.value);
+                            onDifficultyChange(Number.isNaN(int) ? 1 : int);
+                        }}
                         type="number"
                         size="small"
                         inputProps={{ min: 1, max: 5 }}
@@ -66,7 +91,19 @@ export function AutomaticForm(props: Props) {
             <GenerateButton
                 sx={{ marginBottom: 2 }}
                 onClick={() => {
-                    onGenerate(generateText(allowedZones, length));
+                    if (
+                        length < difficulties[difficulty - 1].minChars ||
+                        length > difficulties[difficulty - 1].maxChars
+                    ) {
+                        setGenerateError(
+                            `Длина упражнения должна быть в диапазоне от ${
+                                difficulties[difficulty - 1].minChars
+                            } до ${difficulties[difficulty - 1].maxChars}`
+                        );
+                    } else {
+                        setGenerateError("");
+                        onGenerate(generateText(allowedZones, length));
+                    }
                 }}
             />
             <SaveButton

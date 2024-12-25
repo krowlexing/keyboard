@@ -7,6 +7,7 @@ import { AdminSkeleton } from "../../components/admin/AdminSkeleton.tsx";
 import { DifficultyData, zonesToString } from "../../dto/diff.ts";
 import { network } from "../../network/network.ts";
 import { DifficultyFormData } from "../../components/admin/DifficultyEditForm.tsx/DifficultyEditForm.tsx";
+import { useAdmin } from "../../utils/index.ts";
 
 export function DifficultySettings() {
     const [difficulty, setDifficulty] = useState(1);
@@ -26,6 +27,7 @@ export function DifficultySettings() {
             return () => clearTimeout(timeout);
         }
     }, [savePopup]);
+    useAdmin();
 
     const updateDifficulty = async (data: DifficultyFormData) => {
         const str = zonesToString(data.zones);

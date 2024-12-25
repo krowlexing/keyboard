@@ -24,8 +24,6 @@ export function KeyboardInputTest() {
     const [difficulties, setDifficulties] = useState<DifficultyData[]>([]);
     const [difficulty, setDifficulty] = useState(1);
 
-    difficulties.reverse();
-
     const [keyboardHidden, setKeyboardHidden] = useState(false);
     const [playAudio, setPlayAudio] = useState(false);
 
@@ -37,7 +35,7 @@ export function KeyboardInputTest() {
 
     const defaultTime =
         difficulties.length > 0
-            ? getExerciseDuration(difficulties[5 - difficulty], exampleText)
+            ? getExerciseDuration(difficulties[difficulty - 1], exampleText)
             : 120;
 
     const [timer, start, stop, { resume }] = useTimer(defaultTime * 10, () => {
@@ -132,7 +130,7 @@ export function KeyboardInputTest() {
     if (id == null || difficulties.length == 0) {
         return <div>а где id....</div>;
     }
-    const maxErrors = difficulties[5 - difficulty].errors;
+    const maxErrors = difficulties[difficulty - 1].errors;
 
     return (
         <Skeleton selected="exercises">

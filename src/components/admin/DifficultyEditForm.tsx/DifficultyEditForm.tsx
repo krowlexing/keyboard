@@ -88,31 +88,53 @@ export function DifficultyEditForm(props: DifficultyProps) {
                 id={ids[0]}
                 props={register("min", {
                     valueAsNumber: true,
-                    min: 0,
+                    min: {
+                        value: 25,
+                        message: "Минимальное значение должно быть больше 25",
+                    },
                     required: true,
-                    max: 1000,
+                    max: {
+                        value: 200,
+                        message: "Минимальное значение должно быть меньше 200",
+                    },
                     validate: (value, form) => {
-                        return value < form.max;
+                        return (
+                            value < form.max ||
+                            "Минимальное значение должно быть меньше максимального"
+                        );
                     },
                 })}
             />
             {formErrors.min !== undefined && (
                 <Typography color={"red"} marginLeft={3}>
-                    Минимальное значение должно быть меньше максимального
+                    {formErrors.min.message}
                 </Typography>
             )}
         </>,
-        <Input
-            key={labels[1]}
-            label={labels[1]}
-            id={"max"}
-            props={register("max", {
-                valueAsNumber: true,
-                min: 1,
-                required: true,
-                max: 1000,
-            })}
-        />,
+        <>
+            <Input
+                key={labels[1]}
+                label={labels[1]}
+                id={"max"}
+                props={register("max", {
+                    valueAsNumber: true,
+                    min: {
+                        value: 25,
+                        message: "Минимальное значение должно быть больше 25",
+                    },
+                    max: {
+                        value: 200,
+                        message: "Минимальное значение должно быть меньше 200",
+                    },
+                    required: true,
+                })}
+            />
+            {formErrors.max !== undefined && (
+                <Typography color={"red"} marginLeft={3}>
+                    {formErrors.max.message}
+                </Typography>
+            )}
+        </>,
         <Input
             key={labels[2]}
             label={labels[2]}

@@ -33,7 +33,7 @@ export function Exercises(props: Props) {
         <LevelCard
             onClick={() => nav("/keyboard/" + e.id)}
             time={prettyTime(
-                getExerciseDuration(difficulties[5 - e.level], e.text)
+                getExerciseDuration(difficulties[e.level - 1], e.text)
             )}
             bigNumber={`${i + 1}`}
         />

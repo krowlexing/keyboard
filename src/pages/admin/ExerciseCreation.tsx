@@ -28,7 +28,7 @@ export function ExerciseCreation() {
 
     useEffect(() => {
         network.difficulty.all().then((diff) => {
-            setDifficulties(diff.reverse());
+            setDifficulties(diff);
             setLength(diff[0].minChars);
         });
     }, []);
@@ -112,7 +112,10 @@ export function ExerciseCreation() {
                                     background: "lightpink",
                                 }}
                             >
-                                Некорректная длина
+                                Некорректная длина (должна быть от{" "}
+                                {difficulties[difficulty - 1].minChars} до{" "}
+                                {difficulties[difficulty - 1].maxChars}{" "}
+                                символов)
                             </Paper>
                         ) : (
                             <></>
@@ -127,8 +130,21 @@ export function ExerciseCreation() {
                                 difficultyError={false}
                                 onDifficultyChange={setDifficulty}
                                 onChange={(text) => {
-                                    setInvalid(false);
-                                    setSavedText(text);
+                                    console.log(text);
+                                    if (text.length < savedText.length) {
+                                        setSavedText(text);
+                                    } else if (
+                                        validateText(
+                                            difficulties[difficulty - 1],
+                                            text
+                                        ) &&
+                                        text.length <=
+                                            difficulties[difficulty - 1]
+                                                .maxChars
+                                    ) {
+                                        setInvalid(false);
+                                        setSavedText(text);
+                                    }
                                 }}
                                 onSave={onSubmit}
                             />
@@ -158,11 +174,16 @@ export function validateText(
     text: string
 ): boolean {
     const goodZones = zonesArray(difficulty.zones);
+
     const zoneIds = goodZones
         .map((z, i) => (z ? i : null))
         .filter((z) => z != null);
 
+    console.log(`good zones = ${zoneIds} `);
     const availableChars = zoneIds.flatMap((id) => zones[id]);
 
-    return text.split("").every((char) => availableChars.includes(char));
+    return (
+        text.length === 0 ||
+        text.split("").every((char) => availableChars.includes(char))
+    );
 }

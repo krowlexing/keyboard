@@ -51,9 +51,11 @@ export function ManualForm(props: Props) {
                             min: 1,
                             max: 5,
                         }}
-                        onChange={(e) =>
-                            onDifficultyChange(parseInt(e.target.value))
-                        }
+                        onInput={(e) => {}}
+                        onChange={(e) => {
+                            const int = parseInt(e.target.value);
+                            onDifficultyChange(Number.isNaN(int) ? 1 : int);
+                        }}
                         sx={{
                             width: "5rem",
                             border: difficultyError
