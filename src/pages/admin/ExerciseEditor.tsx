@@ -27,6 +27,9 @@ export function ExerciseEditor() {
     const [length, setLength] = useState(exercise?.text.length);
     const [invalidLength, setInvalidLength] = useState(false);
     const [invalid, setInvalid] = useState(false);
+
+    const [success, setSuccess] = useState(false);
+
     const nav = useNavigate();
 
     const [difficulties, setDifficulties] = useState<DifficultyData[]>([]);
@@ -66,6 +69,20 @@ export function ExerciseEditor() {
         }
     }, [invalidLength]);
 
+    useEffect(() => {
+        if (success) {
+            const timeout = setTimeout(() => {
+                setSuccess(false);
+            }, 3000);
+
+            return () => {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+            };
+        }
+    }, [success]);
+
     const onSubmit = () => {
         if (
             validate() &&
@@ -104,7 +121,7 @@ export function ExerciseEditor() {
         return network.exercises
             .update(+id, text, level)
             .then(() => {
-                nav(-1);
+                setSuccess(true);
             })
             .catch((error) => {
                 console.log(error);
@@ -141,6 +158,24 @@ export function ExerciseEditor() {
                                 {difficulties[difficulty - 1].minChars} до{" "}
                                 {difficulties[difficulty - 1].maxChars}{" "}
                                 символов)
+                            </Paper>
+                        ) : (
+                            <></>
+                        )}
+                        {success ? (
+                            <Paper
+                                sx={{
+                                    position: "absolute",
+                                    top: 0,
+                                    padding: "30px 0px 30px 30px",
+                                    width: "97%",
+                                    left: 0,
+                                    zIndex: 100,
+                                    textAlign: "center",
+                                    background: "lightgreen",
+                                }}
+                            >
+                                Успешно
                             </Paper>
                         ) : (
                             <></>
