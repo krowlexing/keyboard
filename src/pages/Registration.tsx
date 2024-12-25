@@ -5,6 +5,8 @@ import { network } from "../network/network";
 import { useNavigate } from "react-router";
 
 import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import { Error, Modal } from "./KeyboardPage";
 
 type RegisterForm = {
     login: string;
@@ -19,6 +21,17 @@ export function Registration() {
     const submitted = formState.isSubmitted;
     const nav = useNavigate();
 
+    const [showError, setShowError] = useState(false);
+
+    useEffect(() => {
+        if (showError) {
+            const timeout = setTimeout(() => {
+                setShowError(false);
+            }, 3000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [showError]);
     const onSubmit = (data: RegisterForm) => {
         network.auth
             .register(data.login, data.password)
@@ -37,6 +50,7 @@ export function Registration() {
                 }
             })
             .catch((error) => {
+                setShowError(true);
                 console.log(error);
             });
     };
@@ -47,7 +61,10 @@ export function Registration() {
             alignItems={"center"}
             height={"100vh"}
         >
-            <Row justifyContent={"center"}>
+            <Row justifyContent={"center"} position={"relative"}>
+                {showError && (
+                    <Modal message={Error("Неверный логин или пароль")} />
+                )}
                 <Paper sx={{ padding: 7 }}>
                     <form
                         onSubmit={handleSubmit(onSubmit)}

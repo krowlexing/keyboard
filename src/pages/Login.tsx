@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { network } from "../network/network";
 import { useNavigate } from "react-router";
 import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import { Error, Modal } from "./KeyboardPage";
 
 type RegisterForm = {
     login: string;
@@ -19,6 +21,17 @@ export function Login() {
 
     formState.dirtyFields.login;
     const submitted = formState.isSubmitted;
+    const [showError, setShowError] = useState(false);
+
+    useEffect(() => {
+        if (showError) {
+            const timeout = setTimeout(() => {
+                setShowError(false);
+            }, 3000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [showError]);
 
     const onSubmit = (data: RegisterForm) => {
         network.auth
@@ -39,6 +52,8 @@ export function Login() {
                 }
             })
             .catch((error) => {
+                console.log("hello");
+                setShowError(true);
                 console.log(error);
             });
     };
@@ -49,7 +64,10 @@ export function Login() {
             alignItems={"center"}
             height={"100vh"}
         >
-            <Row justifyContent={"center"}>
+            <Row justifyContent={"center"} position={"relative"}>
+                {showError && (
+                    <Modal message={Error("Неверный логин или пароль")} />
+                )}
                 <Paper sx={{ padding: 7 }}>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
@@ -62,8 +80,14 @@ export function Login() {
                                     error={!!errors.login && submitted}
                                     {...register("login", {
                                         required: true,
-                                        minLength: 4,
-                                        maxLength: 8,
+                                        minLength: {
+                                            value: 4,
+                                            message: "длина от 4 до 8 символов",
+                                        },
+                                        maxLength: {
+                                            value: 8,
+                                            message: "длина от 4 до 8 символов",
+                                        },
                                     })}
                                     sx={{
                                         marginTop: 3,
@@ -82,18 +106,29 @@ export function Login() {
                                 <TextField
                                     {...register("password", {
                                         required: true,
-                                        minLength: 4,
-                                        maxLength: 10,
+                                        minLength: {
+                                            value: 4,
+                                            message:
+                                                "длина от 4 до 10 символов",
+                                        },
+                                        maxLength: {
+                                            value: 10,
+                                            message:
+                                                "длина от 4 до 10 символов",
+                                        },
                                     })}
                                     sx={{ width: "100%" }}
                                     label="пароль"
                                     type="password"
                                     size="small"
                                 />
-                                {errors.password ? (
-                                    <Txt>длина от 4 до 10 символов</Txt>
+
+                                {errors.password && submitted ? (
+                                    <Txt color={"red"}>
+                                        {errors.password.message}
+                                    </Txt>
                                 ) : (
-                                    ""
+                                    <></>
                                 )}
                             </Column>
                             <Row width="100%">

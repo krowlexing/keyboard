@@ -40,6 +40,12 @@ export function KeyboardInputTest() {
 
     const [timer, start, stop, { resume }] = useTimer(defaultTime * 10, () => {
         setDisabled(true);
+        network.stats.create({
+            exerciseId: +id!,
+            chars: value.length,
+            time: defaultTime - timer / 10,
+            errors: countErrors(value, exampleText),
+        });
         scheduleReturn();
     });
 
@@ -228,7 +234,7 @@ function getNextKey(value: string, exampleText: string): string {
     return char == " " ? "spacebar" : char;
 }
 
-function Error(text: string) {
+export function Error(text: string) {
     return (
         <div
             style={{
@@ -264,7 +270,7 @@ function PressFaster() {
     return Error("нажимай быстрее");
 }
 
-function Modal(props: { message: JSX.Element }) {
+export function Modal(props: { message: JSX.Element }) {
     return (
         <div
             style={{
