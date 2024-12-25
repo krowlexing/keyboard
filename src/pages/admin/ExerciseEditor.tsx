@@ -11,10 +11,11 @@ import { Exercise } from "../../data/Exercise.ts";
 import { network } from "../../network/network.ts";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
-import { Txt } from "../../utils/styles.tsx";
+import { Row, Txt } from "../../utils/styles.tsx";
 import { DifficultyData } from "../../dto/diff.ts";
 import { validateText } from "./ExerciseCreation.tsx";
 import { useAdmin } from "../../utils/index.ts";
+import { ArrowBack } from "@mui/icons-material";
 
 export function ExerciseEditor() {
     const { id } = useParams();
@@ -66,7 +67,11 @@ export function ExerciseEditor() {
     }, [invalidLength]);
 
     const onSubmit = () => {
-        if (validate()) {
+        if (
+            validate() &&
+            (savedText.length < difficulties[difficulty - 1].minChars ||
+                savedText.length > difficulties[difficulty - 1].maxChars)
+        ) {
             updateExercise(savedText, difficulty);
         }
     };
@@ -140,7 +145,16 @@ export function ExerciseEditor() {
                         ) : (
                             <></>
                         )}
-                        <TypeSelector onChange={setManual} manual={manual} />
+                        <Row position={"relative"}>
+                            <ArrowBack
+                                onClick={() => nav(-1)}
+                                sx={{ position: "absolute", top: 50 }}
+                            ></ArrowBack>
+                            <TypeSelector
+                                onChange={setManual}
+                                manual={manual}
+                            />
+                        </Row>
                         {invalid ? "Недопустимые символы" : ""}
                         {manual ? (
                             <ManualForm
